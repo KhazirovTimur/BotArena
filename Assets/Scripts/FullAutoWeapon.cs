@@ -7,7 +7,6 @@ public class FullAutoWeapon : MonoBehaviour, IWeapon
     public GameObject bullet;
     
     private bool _triggerIsPushed;
-    private bool _triggerWasReleased;
     private int _capacity;
     private float _delay;
 
@@ -21,7 +20,6 @@ public class FullAutoWeapon : MonoBehaviour, IWeapon
     void Start()
     {
         _triggerIsPushed = false;
-        _triggerWasReleased = true;
         _capacity = weaponData.Capacity;
     }
 
@@ -44,7 +42,6 @@ public class FullAutoWeapon : MonoBehaviour, IWeapon
 
     public void Shoot()
     {
-        _triggerWasReleased = false;
         _capacity -= 1;
         GameObject newBullet = Instantiate(bullet, transform);
         newBullet.transform.LookAt(_target);

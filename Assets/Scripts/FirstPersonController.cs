@@ -63,6 +63,11 @@ namespace StarterAssets
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
+		
+		[Header("Weapons")]
+		//weapons
+		public GameObject weaponRoot;
+		private IWeapon _weapon;
 
 	
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -108,6 +113,8 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
+
+			_weapon = weaponRoot.GetComponentInChildren<IWeapon>();
 		}
 
 		private void Update()
@@ -115,6 +122,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			TriggerPushed();
 		}
 
 		private void LateUpdate()
@@ -243,6 +251,28 @@ namespace StarterAssets
 			if (_verticalVelocity < _terminalVelocity)
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
+			}
+		}
+
+
+		private void TriggerPushed()
+		{
+			// Bit shift the index of the layer (8) to get a bit mask
+			int layerMask = 1 << 8;
+
+			// This would cast rays only against colliders in layer 8.
+			// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
+			layerMask = ~layerMask;
+
+			RaycastHit hit;
+			// Does the ray intersect any objects excluding the player layer
+			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+			{
+				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
+			}
+			else
+			{
+				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
 			}
 		}
 

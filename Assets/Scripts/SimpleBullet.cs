@@ -3,10 +3,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class SimpleBullet : MonoBehaviour
+public class SimpleBullet : MonoBehaviour, IProjectile
 {
     [SerializeField] private float _bulletLifeTime = 2.0f;
-    [SerializeField] private float _bulletSpeed = 40;
+    
+    private float _bulletSpeed = 40;
+    private float _damage;
+    
+    
 
     private float _endOfLife;
     
@@ -28,8 +32,19 @@ public class SimpleBullet : MonoBehaviour
         transform.Translate(Vector3.forward * _bulletSpeed * Time.deltaTime);
     }
 
+    public void SetDamage(float damage)
+    {
+        _damage = damage;
+    }
+
+    public void SetSpeed(float speed)
+    {
+        _bulletSpeed = speed;
+    }
+
+
     private void OnCollisionEnter(Collision collision)
     {
-        //Destroy(this.gameObject);
+        Destroy(this.gameObject);
     }
 }

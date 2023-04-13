@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [CreateAssetMenu(fileName = "New Weapon", menuName = "Weapon", order = 51)]
-public class WeaponDataSO : ScriptableObject
+public class WeaponDataSo : ScriptableObject
 {
     [SerializeField]
     private string name;
@@ -20,6 +20,9 @@ public class WeaponDataSO : ScriptableObject
     [SerializeField] 
     private float reloadTime;
     
+    [SerializeField] 
+    private bool isFullAuto;
+    
     public int Capacity => capacity;
 
     public string Name => name;
@@ -29,4 +32,6 @@ public class WeaponDataSO : ScriptableObject
     public float ShotDelay => shotDelay;
 
     public float ReloadTime => reloadTime;
+
+    public bool IsFullAuto => isFullAuto;
 }

@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEditor.ShaderGraph.Internal;
+using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
 #endif
@@ -13,13 +15,26 @@ namespace StarterAssets
 	{
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
-		public float MoveSpeed = 4.0f;
+		public float MoveSpeed = 12.0f;
 		[Tooltip("Sprint speed of the character in m/s")]
 		public float SprintSpeed = 6.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
+		[Tooltip("Dash initial speed")]
+		public float DashStartSpeed = 26.0f;
+		[Tooltip("Time required to pass before being able to dash again. Set to 0f to instantly dash again")]
+		public float DashTimeout = 1.5f;
+		[Tooltip("How long dash works")]
+		public float DashTime = 0.001f;
+		[Tooltip("If the character is in dash or not")]
+		[HideInInspector]
+		public bool InDash = false;
+		[Tooltip("Direction of dash")]
+		[HideInInspector]
+		public Vector3 DashCurrentDirection;
+		
 
 		[Space(10)]
 		[Tooltip("The height the player can jump")]
@@ -63,11 +78,14 @@ namespace StarterAssets
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
-		
+		private float _dashTimeoutDelta;
+		private float _dashTimeDelta;
+
 		[Header("Weapons")]
 		//weapons
 		public GameObject weaponRoot;
 		private IWeapon _weapon;
+		private RaycastHit hit;
 
 	
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -122,6 +140,7 @@ namespace StarterAssets
 			JumpAndGravity();
 			GroundedCheck();
 			Move();
+			Dash();
 			TriggerPushed();
 		}
 
@@ -161,8 +180,10 @@ namespace StarterAssets
 
 		private void Move()
 		{
-			// set target speed based on move speed, sprint speed and if sprint is pressed
-			float targetSpeed = _input.sprint ? SprintSpeed : MoveSpeed;
+			if(InDash)  //disable move controller while dashing
+				return;
+			// set target speed based on move speed
+			float targetSpeed = MoveSpeed;
 
 			// a simplistic acceleration and deceleration designed to be easy to remove, replace, or iterate upon
 
@@ -264,16 +285,59 @@ namespace StarterAssets
 			// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
 			layerMask = ~layerMask;
 
-			RaycastHit hit;
+			
 			// Does the ray intersect any objects excluding the player layer
+			// If doesn't hit anything, send big distance
 			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
 			{
-				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
+				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.TransformDirection(Vector3.forward) * hit.distance));
 			}
 			else
 			{
 				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
 			}
+		}
+
+
+		private void Dash()
+		{
+			if (!InDash)
+			{
+				//initiate dash
+				if (_input.dash && !InDash && _dashTimeoutDelta <= 0 && _input.move != Vector2.zero)
+				{
+					InDash = true;
+					_dashTimeDelta = DashTime;
+					DashCurrentDirection = new Vector3(_input.move.x, 0.0f, _input.move.y).normalized;
+					DashCurrentDirection = transform.right * _input.move.x + transform.forward * _input.move.y;
+					_speed = DashStartSpeed;
+				}
+				//dash cooldown
+				if (_dashTimeoutDelta >= 0.0f)
+				{
+					_dashTimeoutDelta -= Time.deltaTime;
+				}
+				
+			}
+			else
+			{
+				//Moving controller in dash, reducing dash timer
+				if (_dashTimeDelta >= 0.0f)
+				{
+					_dashTimeDelta -= Time.deltaTime;
+					_controller.Move(DashCurrentDirection.normalized * (_speed * Time.deltaTime));	
+					float currentHorizontalSpeed = new Vector3(_controller.velocity.x, 0.0f, _controller.velocity.z).magnitude;
+					_speed = Mathf.Lerp(currentHorizontalSpeed, MoveSpeed,  ( DashTime - _dashTimeDelta)/ DashTime);
+				}
+				else
+				{  //stopping dash, initiating cooldown timer
+					InDash = false;
+					_input.dash = false;
+					_dashTimeoutDelta = DashTimeout;
+				}
+
+			}
+
 		}
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

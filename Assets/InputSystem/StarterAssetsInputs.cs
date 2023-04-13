@@ -3,6 +3,8 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 #endif
 
+//key readings 
+
 namespace StarterAssets
 {
 	public class StarterAssetsInputs : MonoBehaviour
@@ -11,8 +13,8 @@ namespace StarterAssets
 		public Vector2 move;
 		public Vector2 look;
 		public bool jump;
-		public bool sprint;
 		public bool triggerPushed;
+		public bool dash;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -39,15 +41,16 @@ namespace StarterAssets
 		{
 			JumpInput(value.isPressed);
 		}
-
-		public void OnSprint(InputValue value)
-		{
-			SprintInput(value.isPressed);
-		}
+		
 
 		public void OnShoot(InputValue value)
 		{
 			TriggerPushed(value.isPressed);
+		}
+
+		public void OnDash(InputValue value)
+		{
+			DashInput(value.isPressed);
 		}
 #endif
 
@@ -66,11 +69,7 @@ namespace StarterAssets
 		{
 			jump = newJumpState;
 		}
-
-		public void SprintInput(bool newSprintState)
-		{
-			sprint = newSprintState;
-		}
+		
 		
 		private void OnApplicationFocus(bool hasFocus)
 		{
@@ -86,6 +85,12 @@ namespace StarterAssets
 		{
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
+		
+		public void DashInput(bool dashIsPressed)
+		{
+			dash = dashIsPressed;
+		}
+		
 	}
 	
 }

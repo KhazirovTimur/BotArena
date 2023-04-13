@@ -7,11 +7,10 @@ public class SimpleBullet : MonoBehaviour, IProjectile
 {
     [SerializeField] private float _bulletLifeTime = 2.0f;
     
-    private float _bulletSpeed = 40;
+    public float _bulletSpeed = 40;
     private float _damage;
+    private RaycastHit hit;
     
-    
-
     private float _endOfLife;
     
     // Start is called before the first frame update
@@ -30,6 +29,16 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     private void FixedUpdate()
     {
         transform.Translate(Vector3.forward * _bulletSpeed * Time.deltaTime);
+        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward),
+                out hit, _bulletSpeed * 0.02f))
+        {
+            if (hit.collider.gameObject.CompareTag("Enemy"))
+            {
+                
+            }
+            Destroy(this.gameObject);
+        }
+
     }
 
     public void SetDamage(float damage)
@@ -41,10 +50,14 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     {
         _bulletSpeed = speed;
     }
+    
 
-
-    private void OnCollisionEnter(Collision collision)
+    private void OnTriggerEnter(Collider other)
     {
-        Destroy(this.gameObject);
+        if (other.gameObject.layer != 7 || other.gameObject.layer != 8)
+        {
+            
+            
+        }
     }
 }

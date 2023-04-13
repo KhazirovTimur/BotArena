@@ -17,3 +17,4 @@ MonoBehaviour:
   shotDelay: 0.06
   capacity: 30
   reloadTime: 2
+  isFullAuto: 0

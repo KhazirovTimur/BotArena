@@ -81,10 +81,10 @@ namespace StarterAssets
 		private float _dashTimeoutDelta;
 		private float _dashTimeDelta;
 
-		[Header("Weapons")]
-		//weapons
-		public GameObject weaponRoot;
-		private IWeapon _weapon;
+	
+		//Link to player inventory
+		private PlayerInventory _playerInventory;
+		
 		private RaycastHit hit;
 
 	
@@ -131,8 +131,7 @@ namespace StarterAssets
 			// reset our timeouts on start
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
-
-			_weapon = weaponRoot.GetComponentInChildren<IWeapon>();
+			_playerInventory = GetComponentInChildren<PlayerInventory>();
 		}
 
 		private void Update()
@@ -286,15 +285,14 @@ namespace StarterAssets
 			layerMask = ~layerMask;
 
 			
-			// Does the ray intersect any objects excluding the player layer
-			// If doesn't hit anything, send big distance
+			//Always send information: "Is player pushing fire button or not?"; "Where is he aiming?"
 			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
 			{
-				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.TransformDirection(Vector3.forward) * hit.distance));
+				_playerInventory.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.TransformDirection(Vector3.forward) * hit.distance));
 			}
 			else
 			{
-				_weapon.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
+				_playerInventory.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + _mainCamera.transform.forward * 1000);
 			}
 		}
 

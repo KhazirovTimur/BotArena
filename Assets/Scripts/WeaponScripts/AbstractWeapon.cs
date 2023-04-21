@@ -46,6 +46,7 @@ public abstract class AbstractWeapon : MonoBehaviour
    
 
     //cache for projectiles pool
+    [HideInInspector]
     public int ProjectilePoolIndex;
     //variables for trigger behavior
     protected bool _triggerIsPushed;
@@ -74,13 +75,13 @@ public abstract class AbstractWeapon : MonoBehaviour
     }
 
     //Check requirements to make shot
-    void Update()
+    protected virtual void Update()
     {
         if (!_triggerIsPushed)
             _triggerWasReleased = true;
         if (ShotRequirements())
         {
-            Shoot();
+            UnitedShoot();
         }
         
     }
@@ -100,38 +101,20 @@ public abstract class AbstractWeapon : MonoBehaviour
     }
 
 
-    protected virtual void Shoot()
+    protected virtual void UnitedShoot()
     {
         _triggerWasReleased = false;
         _playerInventory.ReduceAmmoByOne();
         BarrelEnd.LookAt(_aim);
         //adding spread
-        BarrelEnd.localRotation = Quaternion.Euler(
-            BarrelEnd.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
-            BarrelEnd.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
-            BarrelEnd.localRotation.eulerAngles.z);
-        
+        RanomizeSpread();
         if (!IsRayCast)
         {
-            GameObject newBullet = _playerInventory.Pooler.GetPool(ProjectilePoolIndex).Get();
-            newBullet.transform.position = BarrelEnd.position;
-            newBullet.transform.rotation = BarrelEnd.rotation;
-            IProjectile bullet = newBullet.transform.GetComponent<IProjectile>();
-            bullet.SetDamage(Damage);
-            bullet.SetSpeed(ProjectileSpeed);
-            bullet.SetParentPool(_playerInventory.Pooler, ProjectilePoolIndex);
-            bullet.ResetLifeTime();
+            ProjectileShot();
         }
         else
         {
-            if (Physics.Raycast(transform.position, BarrelEnd.forward,
-                    out _target, 1000))
-            {
-                if (_target.transform.TryGetComponent<IDamagable>(out IDamagable target))
-                {
-                    target.TakeDamage(Damage);
-                }
-            }
+            RaycastShot();
         }
         _delay = Time.time + ShotDelay;
         BarrelEnd.LookAt(_aim);
@@ -139,7 +122,42 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     }
 
-    
+
+
+    protected virtual void RanomizeSpread()
+    {
+        BarrelEnd.localRotation =  Quaternion.Euler(
+            BarrelEnd.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
+            BarrelEnd.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
+            BarrelEnd.localRotation.eulerAngles.z);
+    }
+
+
+    protected virtual void ProjectileShot()
+    {
+        GameObject newBullet = _playerInventory.Pooler.GetPool(ProjectilePoolIndex).Get();
+        newBullet.transform.position = BarrelEnd.position;
+        newBullet.transform.rotation = BarrelEnd.rotation;
+        IProjectile bullet = newBullet.transform.GetComponent<IProjectile>();
+        bullet.SetDamage(Damage);
+        bullet.SetSpeed(ProjectileSpeed);
+        bullet.SetParentPool(_playerInventory.Pooler, ProjectilePoolIndex);
+        bullet.ResetLifeTime();
+    }
+
+    protected virtual void RaycastShot()
+    {
+        if (Physics.Raycast(transform.position, BarrelEnd.forward,
+                out _target, 1000))
+        {
+            if (_target.transform.TryGetComponent<IDamagable>(out IDamagable target))
+            {
+                target.TakeDamage(Damage);
+            }
+        }
+    }
+
+
 
     //Get input 
     public void TriggerPushed(bool triggerStatePushed, Vector3 pointOnTarget)

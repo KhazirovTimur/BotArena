@@ -43,7 +43,7 @@ public class PlayerInventory : MonoBehaviour
         {
             for (int i = 0;  i < WeaponsPrefabs.Count; i++)
             {
-                GameObject weapon = Instantiate(WeaponsPrefabs[ActiveWeaponIndex], WeaponRoot);
+                GameObject weapon = Instantiate(WeaponsPrefabs[i], WeaponRoot);
                 weapon.transform.SetParent(WeaponRoot);
                 if (weapon.transform.TryGetComponent<AbstractWeapon>(out AbstractWeapon weaponScript))
                 {
@@ -78,7 +78,7 @@ public class PlayerInventory : MonoBehaviour
              i < System.Enum.GetValues(typeof(AmmoTypes.Ammotypes)).Length;
              i++)
         { 
-            WeaponsAmmo.Add(0);
+            WeaponsAmmo.Add(150);
         }
         
         SetActiveWeapon(ActiveWeaponIndex);

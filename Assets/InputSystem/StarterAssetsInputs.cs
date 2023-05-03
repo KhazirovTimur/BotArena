@@ -15,6 +15,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool triggerPushed;
 		public bool dash;
+		public int ActiveWeaponIndex = 1;
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -52,6 +53,26 @@ namespace StarterAssets
 		{
 			DashInput(value.isPressed);
 		}
+
+		public void OnChooseWeapon1()
+		{
+			ChooseWeaponInput(0);
+		}
+		
+		public void OnChooseWeapon2()
+		{
+			ChooseWeaponInput(1);
+		}
+		
+		public void OnChooseWeapon3()
+		{
+			ChooseWeaponInput(2);
+		}
+		
+		public void OnChooseWeapon4()
+		{
+			ChooseWeaponInput(3);
+		}
 #endif
 
 
@@ -86,11 +107,16 @@ namespace StarterAssets
 			Cursor.lockState = newState ? CursorLockMode.Locked : CursorLockMode.None;
 		}
 		
-		public void DashInput(bool dashIsPressed)
+		private void DashInput(bool dashIsPressed)
 		{
 			dash = dashIsPressed;
 		}
-		
+
+		private void ChooseWeaponInput(int activeWeapon)
+		{
+			ActiveWeaponIndex = activeWeapon;
+		}
+
 	}
 	
 }

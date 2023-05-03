@@ -356,17 +356,17 @@ PrefabInstance:
     - target: {fileID: 6341736656809691701, guid: 2ec604ea7d4cfb946b031c78977e73b6,
         type: 3}
       propertyPath: m_LocalPosition.x
-      value: -0.2780795
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6341736656809691701, guid: 2ec604ea7d4cfb946b031c78977e73b6,
         type: 3}
       propertyPath: m_LocalPosition.y
-      value: 0.557
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6341736656809691701, guid: 2ec604ea7d4cfb946b031c78977e73b6,
         type: 3}
       propertyPath: m_LocalPosition.z
-      value: 9.638039
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6341736656809691701, guid: 2ec604ea7d4cfb946b031c78977e73b6,
         type: 3}
@@ -693,6 +693,24 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2406743053042463410}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &3668125952304493682
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747160277638396038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 348e1b3c00847194f9fdcdff7afefa0a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  positionalRecoilSpeed: 8
+  rotationalRecoilSpeed: 8
+  positionalReturnSpeed: 18
+  rotationalReturnSpeed: 38
+  RecoilRotation: {x: 10, y: 5, z: 7}
+  RecoilKickBack: {x: 0.015, y: 0, z: -0.2}
 --- !u!114 &4595979341351379439
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -706,13 +724,14 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Name: Pistol
-  Damage: 30
-  ShotDelay: 0.1
-  SpreadAngle: 3
-  IsFullAuto: 1
+  Damage: 45
+  ShotDelay: 0.5
+  SpreadAngle: 0.5
+  IsFullAuto: 0
   IsRayCast: 0
-  Projectile: {fileID: 7716959810933316257, guid: 1721e3d0fc50c1b4cae37d194ad275ac,
+  Projectile: {fileID: 7716959810933316257, guid: 3f1eb7609e9b8d846b47bb84ba366083,
     type: 3}
-  ProjectileSpeed: 60
-  BarrelEnd: {fileID: 0}
+  ProjectileSpeed: 40
+  BarrelEnd: {fileID: 5055533325294323932}
   WeaponAmmoType: 0
+  ProjectilePoolIndex: 

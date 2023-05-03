@@ -84,6 +84,7 @@ namespace StarterAssets
 	
 		//Link to player inventory
 		private PlayerInventory _playerInventory;
+		private int _activeWeaponCache;
 		
 		private RaycastHit hit;
 
@@ -132,6 +133,7 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 			_playerInventory = GetComponentInChildren<PlayerInventory>();
+			_activeWeaponCache = _input.ActiveWeaponIndex;
 		}
 
 		private void Update()
@@ -141,6 +143,7 @@ namespace StarterAssets
 			Move();
 			Dash();
 			TriggerPushed();
+			CheckActiveWeapon();
 		}
 
 		private void LateUpdate()
@@ -336,6 +339,15 @@ namespace StarterAssets
 
 			}
 
+		}
+
+		private void CheckActiveWeapon()
+		{
+			if (_activeWeaponCache != _input.ActiveWeaponIndex)
+			{
+				_playerInventory.ChangeActiveWeapon(_input.ActiveWeaponIndex);
+				_activeWeaponCache = _input.ActiveWeaponIndex;
+			}
 		}
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

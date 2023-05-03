@@ -38,53 +38,82 @@ public class PlayerInventory : MonoBehaviour
     //Instantiate all weapons
     private void Awake()
     {
-        Pooler = FindObjectOfType<ObjectPooler>();
-        if(WeaponsPrefabs.Count != 0)
-        {
-            for (int i = 0;  i < WeaponsPrefabs.Count; i++)
-            {
-                GameObject weapon = Instantiate(WeaponsPrefabs[i], WeaponRoot);
-                weapon.transform.SetParent(WeaponRoot);
-                if (weapon.transform.TryGetComponent<AbstractWeapon>(out AbstractWeapon weaponScript))
-                {
-                    Weapons.Add(weaponScript);
-                    if (!weaponScript.IsRayCast)
-                    {
-                        weaponScript.ProjectilePoolIndex = Pooler.CreatePool(weaponScript.Projectile,
-                            (int) (2 / weaponScript.ShotDelay));
-                    }
-                }
-                else
-                {
-                    Debug.LogError("Weapon prefab in inventory doesn't have AbstractWeapon script");
-                }
-                WeaponsGO.Add(weapon);
-                weapon.SetActive(true);
-            }
-        }
-        else
-        {
-            Debug.LogError("No weapons prefabs attached to inventory");
-        }
+
     }
     
     
     //Instantiate weapons ammo
     void Start()
     {
+        if (CheckPrefabsAssigned())
+        {
+            InstantiateWeapons();
+            CreateAmmoPools();
+            AddAmmoToAllWeapons();
+        }
+        
         ActiveWeaponIndex = 0;
+        LeaveOneActiveWeapon(ActiveWeaponIndex);
+    }
+    
+    private bool CheckPrefabsAssigned()
+    {
+        if (WeaponsPrefabs.Count != 0)
+            return true;
+        Debug.LogError("No weapons prefabs attached to inventory");
+        return false;
+    }
 
+
+    private void InstantiateWeapons()
+    {
+        
+        for (int i = 0;  i < WeaponsPrefabs.Count; i++)
+        {
+            GameObject weapon = Instantiate(WeaponsPrefabs[i], WeaponRoot);
+            weapon.transform.SetParent(WeaponRoot);
+            if (weapon.transform.TryGetComponent(out AbstractWeapon weaponScript))
+            {
+                Weapons.Add(weaponScript);
+
+
+            }
+            else
+            {
+                Debug.LogError("Weapon prefab in inventory doesn't have AbstractWeapon script");
+            }
+            WeaponsGO.Add(weapon);
+            weapon.SetActive(true);
+        }
+    }
+
+    private void CreateAmmoPools()
+    {
+        Pooler = FindObjectOfType<ObjectPooler>();
+        foreach (var weapon in Weapons)
+        {
+            AbstractWeapon weaponScript = weapon.GetComponent<AbstractWeapon>();
+            if (!weaponScript.IsRayCast)
+            { 
+                weaponScript.ProjectilePoolIndex = Pooler.CreatePool(weaponScript.Projectile.GetComponent<IPoolable>(),
+                    (int) (2 / weaponScript.ShotDelay));
+            }
+        }
+
+    }
+
+
+    private void AddAmmoToAllWeapons()
+    {
         for (int i = 0;
              i < System.Enum.GetValues(typeof(AmmoTypes.Ammotypes)).Length;
              i++)
         { 
             WeaponsAmmo.Add(150);
         }
-        
-        SetActiveWeapon(ActiveWeaponIndex);
     }
-    
-    
+
+
     //Function for weapons to let them reduce ammo
     public void ReduceAmmoByOne()
     {
@@ -98,10 +127,9 @@ public class PlayerInventory : MonoBehaviour
     {
         return WeaponsAmmo[ammoIndex];
     }
+    
 
-
-
-    public void SetActiveWeapon(int weaponIndex)
+    private void LeaveOneActiveWeapon(int weaponIndex)
     {
         foreach (var VARIABLE in WeaponsGO)
         {
@@ -111,7 +139,15 @@ public class PlayerInventory : MonoBehaviour
     }
 
 
-    
+    public void ChangeActiveWeapon(int weaponIndex)
+    {
+        WeaponsGO[ActiveWeaponIndex].SetActive(false);
+        ActiveWeaponIndex = weaponIndex;
+        WeaponsGO[ActiveWeaponIndex].SetActive(true);
+    }
+
+
+
     public void TriggerPushed(bool triggerStatePushed, Vector3 pointOnTarget)
     { 
         Weapons[ActiveWeaponIndex].TriggerPushed(triggerStatePushed, pointOnTarget);

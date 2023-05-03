@@ -7,13 +7,12 @@ public class Shotgun : AbstractWeapon
    [Space] [Header("Special shotgun parameters")]
    public int ProjectilesPerShot;
 
-   protected virtual void UnitedShoot()
+   protected override void Shoot()
    {
       _triggerWasReleased = false;
       _playerInventory.ReduceAmmoByOne();
       for (int i = 0; i < ProjectilesPerShot; i++)
       {
-         Debug.Log("Boop");
          BarrelEnd.LookAt(_aim);
          //adding spread
          RanomizeSpread();
@@ -38,7 +37,7 @@ public class Shotgun : AbstractWeapon
          _triggerWasReleased = true;
       if (ShotRequirements())
       {
-         UnitedShoot();
+         Shoot();
       }
    }
 }

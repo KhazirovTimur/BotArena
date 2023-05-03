@@ -4,34 +4,48 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Pool;
+using Object = System.Object;
 
 
 //Contains pools of different objects
 
 public class ObjectPooler : MonoBehaviour
 {
-    
-    private List<ObjectPool<GameObject>> Pools = new List<ObjectPool<GameObject>>();
+
+    public Dictionary<int, ObjectPool<IPoolable>> Pools = new Dictionary<int, ObjectPool<IPoolable>>();
+
+    private int counter = 0;
     
 
-    public int CreatePool(GameObject reference, int defaultCapacity)
+    public int CreatePool(IPoolable reference, int defaultCapacity)
     {
-        Pools.Add( new ObjectPool<GameObject>(
+        Debug.Log("counter before creating " + counter);
+        ObjectPool<IPoolable> ToAdd = new ObjectPool<IPoolable>(
             () =>
             {
-                GameObject obj = Instantiate(reference);
+                GameObject obj = Instantiate(reference.GetGameObject());
                 obj.transform.parent = this.transform;
-                return obj;
-            }, 
-            gameobj => { gameobj.SetActive(true); }, 
-            gameobj => { gameobj.SetActive(false); }, 
-            gameobj => { Destroy(gameobj); }, 
-            true, defaultCapacity, 500
-            ));
-        return Pools.Count - 1;
+                IPoolable newObject = obj.GetComponent<IPoolable>();
+                newObject.SetParentPool(this, counter - 1);
+                return newObject;
+            },
+            gameobj =>
+            {
+                gameobj.GetFromPool(); 
+                gameobj.ResetLifeTime();
+            },
+            gameobj => { gameobj.ReleaseToPool(); },
+            gameobj => { Destroy(gameobj.GetGameObject()); },
+            true, defaultCapacity, 500);
+        Pools.Add(counter, ToAdd);
+        Debug.Log("counter before increase " + counter);
+        counter += 1;
+        Debug.Log("counter after increase " + counter);
+        Debug.Log("counter - 1 " + (counter - 1));
+        return (counter-1);
     }
 
-    public ObjectPool<GameObject> GetPool(int index)
+    public ObjectPool<IPoolable> GetPool(int index)
     {
         return Pools[index];
     }

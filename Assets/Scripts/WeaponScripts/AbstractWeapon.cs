@@ -81,7 +81,7 @@ public abstract class AbstractWeapon : MonoBehaviour
             _triggerWasReleased = true;
         if (ShotRequirements())
         {
-            UnitedShoot();
+            Shoot();
         }
         
     }
@@ -101,7 +101,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     }
 
 
-    protected virtual void UnitedShoot()
+    protected virtual void Shoot()
     {
         _triggerWasReleased = false;
         _playerInventory.ReduceAmmoByOne();
@@ -135,13 +135,12 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     protected virtual void ProjectileShot()
     {
-        GameObject newBullet = _playerInventory.Pooler.GetPool(ProjectilePoolIndex).Get();
-        newBullet.transform.position = BarrelEnd.position;
-        newBullet.transform.rotation = BarrelEnd.rotation;
-        IProjectile bullet = newBullet.transform.GetComponent<IProjectile>();
+        IPoolable newBullet = _playerInventory.Pooler.GetPool(ProjectilePoolIndex).Get();
+        newBullet.GetGameObject().transform.position = BarrelEnd.position;
+        newBullet.GetGameObject().transform.rotation = BarrelEnd.rotation;
+        IProjectile bullet = newBullet.GetGameObject().GetComponent<IProjectile>();
         bullet.SetDamage(Damage);
         bullet.SetSpeed(ProjectileSpeed);
-        bullet.SetParentPool(_playerInventory.Pooler, ProjectilePoolIndex);
         bullet.ResetLifeTime();
     }
 

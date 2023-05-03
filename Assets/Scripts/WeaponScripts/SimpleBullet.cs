@@ -5,7 +5,7 @@ using System.ComponentModel.Design;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 
-public class SimpleBullet : MonoBehaviour, IProjectile
+public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
 {
     
     //after this time will be destroyed
@@ -25,17 +25,23 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     private ObjectPooler _pooler;
     private int _poolIndex;
 
+
+    private void OnEnable()
+    {
+        ResetLifeTime();
+    }
+
     //set timer
     void Start()
     {
         _endOfLife = Time.time + _bulletLifeTime;
+        
     }
 
     // Check time to destroy projectile
     void Update()
     {
-        if(Time.time > _endOfLife)
-            _pooler.GetPool(_poolIndex).Release(this.gameObject);
+        CheckDestroyTimer();
     }
     
     
@@ -43,10 +49,17 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     {
         MoveProjectile();
         CheckObjectsAhead();
-
+        Debug.Log(_poolIndex);
     }
 
-    
+
+    private void CheckDestroyTimer()
+    {
+        if(Time.time > _endOfLife)
+            _pooler.GetPool(_poolIndex).Release(this);
+    }
+
+
     private void MoveProjectile()
     {
         transform.Translate(Vector3.forward * _bulletSpeed * Time.deltaTime);
@@ -63,8 +76,8 @@ public class SimpleBullet : MonoBehaviour, IProjectile
             {
                 target.TakeDamage(_damage);
             }
-            //Destroy(this.gameObject);
-            _pooler.GetPool(_poolIndex).Release(this.gameObject);
+            Debug.Log(_pooler);
+            _pooler.GetPool(_poolIndex).Release(this);
         }
     }
 
@@ -74,6 +87,21 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     {
         _pooler = pooler;
         _poolIndex = index;
+    }
+
+    public GameObject GetGameObject()
+    {
+        return this.gameObject;
+    }
+
+    public void GetFromPool()
+    {
+        this.gameObject.SetActive(true);
+    }
+    
+    public void ReleaseToPool()
+    {
+        this.gameObject.SetActive(false);
     }
 
     public void SetDamage(float damage)
@@ -90,6 +118,9 @@ public class SimpleBullet : MonoBehaviour, IProjectile
     {
         _endOfLife = Time.time + _bulletLifeTime;
     }
+
+
+
 
 
 }

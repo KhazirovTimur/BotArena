@@ -95,8 +95,9 @@ public class PlayerInventory : MonoBehaviour
             AbstractWeapon weaponScript = weapon.GetComponent<AbstractWeapon>();
             if (!weaponScript.IsRayCast)
             { 
-                weaponScript.ProjectilePoolIndex = Pooler.CreatePool(weaponScript.Projectile.GetComponent<IPoolable>(),
-                    (int) (2 / weaponScript.ShotDelay));
+                Pooler.CreatePool(weaponScript.Projectile.GetComponent<IPoolable>(),
+                    (int) (2 / weaponScript.ShotDelay), weaponScript.name);
+                weaponScript.ProjectilePoolIndex = weaponScript.name;
             }
         }
 
@@ -141,10 +142,14 @@ public class PlayerInventory : MonoBehaviour
 
     public void ChangeActiveWeapon(int weaponIndex)
     {
-        WeaponsGO[ActiveWeaponIndex].SetActive(false);
-        ActiveWeaponIndex = weaponIndex;
-        WeaponsGO[ActiveWeaponIndex].SetActive(true);
+        if (weaponIndex < Weapons.Count)
+        {
+            WeaponsGO[ActiveWeaponIndex].SetActive(false);
+            ActiveWeaponIndex = weaponIndex;
+            WeaponsGO[ActiveWeaponIndex].SetActive(true);
+        }
     }
+
 
 
 

@@ -47,7 +47,7 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     //cache for projectiles pool
     [HideInInspector]
-    public int ProjectilePoolIndex;
+    public string ProjectilePoolIndex;
     //variables for trigger behavior
     protected bool _triggerIsPushed;
     protected bool _triggerWasReleased;

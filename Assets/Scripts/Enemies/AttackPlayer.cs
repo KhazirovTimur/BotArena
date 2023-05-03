@@ -23,7 +23,7 @@ public class AttackPlayer : MonoBehaviour
     private float timerUpdateLastPlayerPos;
 
     private ObjectPooler _pooler;
-    private int poolIndex;
+    private string poolIndex = "SimpleEnemy";
     
     
 
@@ -32,8 +32,8 @@ public class AttackPlayer : MonoBehaviour
     {
         playerTransform = FindObjectOfType<FirstPersonController>().transform;
         shotTimer = delayBetweenShots;
-        //_pooler = FindObjectOfType<ObjectPooler>();
-        poolIndex = _pooler.CreatePool(projectile.GetComponent<IPoolable>(), 50);
+        _pooler = FindObjectOfType<ObjectPooler>();
+        _pooler.CreatePool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
         timerUpdateLastPlayerPos = delayUpdateLastPlayerPos;
     }
 
@@ -89,7 +89,7 @@ public class AttackPlayer : MonoBehaviour
         project.GetGameObject().transform.position = transform.position + transform.up;
         project.GetGameObject().transform.LookAt(PredictPlayerPosition());
         IProjectile bullet = project.GetGameObject().GetComponent<IProjectile>();
-        bullet.SetSpeed(projectileSpeed);*/
+        bullet.SetSpeed(projectileSpeed);
         
     }
 

@@ -4,7 +4,7 @@ using UnityEngine;
 
 public interface IPoolable 
 {
-    public void SetParentPool(ObjectPooler pooler, int index);
+    public void SetParentPool(ObjectPooler pooler, string index);
 
     public void GetFromPool();
 

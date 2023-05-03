@@ -733,6 +733,6 @@ MonoBehaviour:
     type: 3}
   ProjectileSpeed: 90
   BarrelEnd: {fileID: 5055533325294323932}
-  WeaponAmmoType: 3
+  WeaponAmmoType: 2
   ProjectilePoolIndex: 0
   ProjectilesPerShot: 7

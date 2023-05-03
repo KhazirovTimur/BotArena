@@ -23,7 +23,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     
     //cache for object pool
     private ObjectPooler _pooler;
-    private int _poolIndex;
+    private string _poolIndex;
 
 
     private void OnEnable()
@@ -49,7 +49,6 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     {
         MoveProjectile();
         CheckObjectsAhead();
-        Debug.Log(_poolIndex);
     }
 
 
@@ -76,14 +75,13 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
             {
                 target.TakeDamage(_damage);
             }
-            Debug.Log(_pooler);
             _pooler.GetPool(_poolIndex).Release(this);
         }
     }
 
     
     
-    public void SetParentPool(ObjectPooler pooler, int index)
+    public void SetParentPool(ObjectPooler pooler, string index)
     {
         _pooler = pooler;
         _poolIndex = index;

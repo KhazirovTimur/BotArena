@@ -16,7 +16,7 @@ public class ObjectPooler : MonoBehaviour
     
     
 
-    public void CreatePool(IPoolable reference, int defaultCapacity, string index)
+    public void AddPool(IPoolable reference, int defaultCapacity, string index)
     {
         if (Pools.ContainsKey(index))
         {

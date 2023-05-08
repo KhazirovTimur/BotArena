@@ -33,7 +33,7 @@ public class AttackPlayer : MonoBehaviour
         playerTransform = FindObjectOfType<FirstPersonController>().transform;
         shotTimer = delayBetweenShots;
         _pooler = FindObjectOfType<ObjectPooler>();
-        _pooler.CreatePool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
+        _pooler.AddPool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
         timerUpdateLastPlayerPos = delayUpdateLastPlayerPos;
     }
 

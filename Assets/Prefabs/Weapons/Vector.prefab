@@ -693,6 +693,21 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2406743053042463410}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &-5982021803493442134
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8747160277638396038}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 67095b1edd9d8314d8bf19a66cdf8ee2, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  projectile: {fileID: 7716959810933316257, guid: 3f1eb7609e9b8d846b47bb84ba366083,
+    type: 3}
+  projectileSpeed: 100
 --- !u!114 &3668125952304493682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -723,15 +738,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b5f25db9fa3ac54da7e4dc07c2ecec0, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  Name: Vector
+  weaponName: Vector
   Damage: 30
-  ShotDelay: 0.1
+  rateOfFire: 1000
   SpreadAngle: 1
   IsFullAuto: 1
-  IsRayCast: 0
-  Projectile: {fileID: 7716959810933316257, guid: 8e5c83c5c3f9e8a4c9639f7b4069ec3d,
-    type: 3}
-  ProjectileSpeed: 60
   BarrelEnd: {fileID: 5055533325294323932}
-  WeaponAmmoType: 1
-  ProjectilePoolIndex: 
+  weaponAmmoType: 1

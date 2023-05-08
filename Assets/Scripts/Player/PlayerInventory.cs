@@ -12,10 +12,6 @@ public class PlayerInventory : MonoBehaviour
     [Tooltip("Fill here weapons prefabs")]
     public List<GameObject> WeaponsPrefabs;
     
-    //Cache for weapons gameobjects
-    [HideInInspector]
-    public List<GameObject> WeaponsGO = new List<GameObject>();
-    
     //Cache for weapons scripts components
     [HideInInspector]
     public List<AbstractWeapon> Weapons = new List<AbstractWeapon>();
@@ -28,27 +24,17 @@ public class PlayerInventory : MonoBehaviour
 
     //Which weapon is active now
     public int ActiveWeaponIndex;
-
-    //Cache for object pooler
-    public ObjectPooler Pooler;
     
 
-
-    //Ask Object pooler to create pools for all non-rayCast weapons
-    //Instantiate all weapons
-    private void Awake()
-    {
-
-    }
     
+
     
-    //Instantiate weapons ammo
+    //Instantiate weapons
     void Start()
     {
         if (CheckPrefabsAssigned())
         {
             InstantiateWeapons();
-            CreateAmmoPools();
             AddAmmoToAllWeapons();
         }
         
@@ -75,34 +61,16 @@ public class PlayerInventory : MonoBehaviour
             if (weapon.transform.TryGetComponent(out AbstractWeapon weaponScript))
             {
                 Weapons.Add(weaponScript);
-
-
             }
             else
             {
                 Debug.LogError("Weapon prefab in inventory doesn't have AbstractWeapon script");
             }
-            WeaponsGO.Add(weapon);
             weapon.SetActive(true);
         }
     }
 
-    private void CreateAmmoPools()
-    {
-        Pooler = FindObjectOfType<ObjectPooler>();
-        foreach (var weapon in Weapons)
-        {
-            AbstractWeapon weaponScript = weapon.GetComponent<AbstractWeapon>();
-            if (!weaponScript.IsRayCast)
-            { 
-                Pooler.CreatePool(weaponScript.Projectile.GetComponent<IPoolable>(),
-                    (int) (2 / weaponScript.ShotDelay), weaponScript.Name);
-                weaponScript.ProjectilePoolIndex = weaponScript.Name;
-            }
-        }
-
-    }
-
+    
 
     private void AddAmmoToAllWeapons()
     {
@@ -118,7 +86,7 @@ public class PlayerInventory : MonoBehaviour
     //Function for weapons to let them reduce ammo
     public void ReduceAmmoByOne()
     {
-        int ammoIndex = (int)(Weapons[ActiveWeaponIndex].WeaponAmmoType);
+        int ammoIndex = (int)(Weapons[ActiveWeaponIndex].GetWeaponAmmoType);
         WeaponsAmmo[ammoIndex] -= 1;
     }
     
@@ -132,22 +100,24 @@ public class PlayerInventory : MonoBehaviour
 
     private void LeaveOneActiveWeapon(int weaponIndex)
     {
-        foreach (var VARIABLE in WeaponsGO)
+        foreach (var VARIABLE in Weapons)
         {
-            VARIABLE.SetActive(false);
+            VARIABLE.GetGameObject().SetActive(false);
         }
-        WeaponsGO[weaponIndex].SetActive(true);
+        Weapons[weaponIndex].GetGameObject().SetActive(true);
     }
 
 
     public void ChangeActiveWeapon(int weaponIndex)
     {
+        Debug.Log($"change weapon to {weaponIndex}");
         if (weaponIndex < Weapons.Count)
         {
-            WeaponsGO[ActiveWeaponIndex].SetActive(false);
+            Weapons[ActiveWeaponIndex].GetGameObject().SetActive(false);
             ActiveWeaponIndex = weaponIndex;
-            WeaponsGO[ActiveWeaponIndex].SetActive(true);
+            Weapons[ActiveWeaponIndex].GetGameObject().SetActive(true);
         }
+        Debug.Log($"active weapon is {ActiveWeaponIndex}");
     }
 
 

@@ -16,16 +16,9 @@ public class Shotgun : AbstractWeapon
          BarrelEnd.LookAt(_aim);
          //adding spread
          RanomizeSpread();
-         if (!IsRayCast)
-         {
-            ProjectileShot();
-         }
-         else
-         {
-            RaycastShot();
-         }
+         shootMechanic.DoShot(BarrelEnd, Damage);
       }
-      _delay = Time.time + ShotDelay;
+      _delay = Time.time + (60 / rateOfFire);
       BarrelEnd.LookAt(_aim);
       ShotWasMade();
 

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
 using UnityEngine.InputSystem;
@@ -15,7 +16,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool triggerPushed;
 		public bool dash;
-		public int ActiveWeaponIndex = 1;
+		
 
 		[Header("Movement Settings")]
 		public bool analogMovement;
@@ -56,22 +57,22 @@ namespace StarterAssets
 
 		public void OnChooseWeapon1()
 		{
-			ChooseWeaponInput(0);
+			ChooseWeapon(0);
 		}
 		
 		public void OnChooseWeapon2()
 		{
-			ChooseWeaponInput(1);
+			ChooseWeapon(1);
 		}
 		
 		public void OnChooseWeapon3()
 		{
-			ChooseWeaponInput(2);
+			ChooseWeapon(2);
 		}
 		
 		public void OnChooseWeapon4()
 		{
-			ChooseWeaponInput(3);
+			ChooseWeapon(3);
 		}
 #endif
 
@@ -112,10 +113,8 @@ namespace StarterAssets
 			dash = dashIsPressed;
 		}
 
-		private void ChooseWeaponInput(int activeWeapon)
-		{
-			ActiveWeaponIndex = activeWeapon;
-		}
+		public Action<int> ChooseWeapon;
+
 
 	}
 	

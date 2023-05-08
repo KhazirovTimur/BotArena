@@ -35,7 +35,6 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     void Start()
     {
         _endOfLife = Time.time + _bulletLifeTime;
-        
     }
 
     // Check time to destroy projectile

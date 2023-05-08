@@ -96,8 +96,8 @@ public class PlayerInventory : MonoBehaviour
             if (!weaponScript.IsRayCast)
             { 
                 Pooler.CreatePool(weaponScript.Projectile.GetComponent<IPoolable>(),
-                    (int) (2 / weaponScript.ShotDelay), weaponScript.name);
-                weaponScript.ProjectilePoolIndex = weaponScript.name;
+                    (int) (2 / weaponScript.ShotDelay), weaponScript.Name);
+                weaponScript.ProjectilePoolIndex = weaponScript.Name;
             }
         }
 

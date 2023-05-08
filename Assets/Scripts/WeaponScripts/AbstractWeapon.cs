@@ -69,6 +69,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     
     void Start()
     {
+        ProjectilePoolIndex = Name;
         _triggerIsPushed = false;
         _triggerWasReleased = true;
         _playerInventory = FindObjectOfType<PlayerInventory>();

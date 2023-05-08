@@ -1732,7 +1732,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   projectileSpeed: 15
-  projectile: {fileID: 7716959810933316257, guid: 1721e3d0fc50c1b4cae37d194ad275ac,
+  projectile: {fileID: 5106754732286531583, guid: c27b587b7378ed44ca21a15c06867767,
     type: 3}
   delayBetweenShots: 3
   delayUpdateLastPlayerPos: 0.05
@@ -1914,22 +1914,27 @@ PrefabInstance:
     m_Modifications:
     - target: {fileID: 1301490066, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: WeaponsPrefabs.Array.size
-      value: 3
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 1301490066, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: WeaponsPrefabs.Array.data[0]
       value: 
-      objectReference: {fileID: 8747160277638396038, guid: 246695b3baf130d45ac705ae87ee9cf0,
+      objectReference: {fileID: 5845779342132687108, guid: 47ec0a0d3280e264abb1a8d3f72d959b,
         type: 3}
     - target: {fileID: 1301490066, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: WeaponsPrefabs.Array.data[1]
       value: 
-      objectReference: {fileID: 8747160277638396038, guid: 788258c42ec7c4a41bd07f46ea9a4728,
+      objectReference: {fileID: 8747160277638396038, guid: 246695b3baf130d45ac705ae87ee9cf0,
         type: 3}
     - target: {fileID: 1301490066, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
       propertyPath: WeaponsPrefabs.Array.data[2]
       value: 
-      objectReference: {fileID: 8747160277638396038, guid: 1daa6b2ae891754489968e4738254854,
+      objectReference: {fileID: 8747160277638396038, guid: fdef26e6c264b3d40856cda31125d3a5,
+        type: 3}
+    - target: {fileID: 1301490066, guid: c5efc39a8aaf6e64ea40e9ad573e9b47, type: 3}
+      propertyPath: WeaponsPrefabs.Array.data[3]
+      value: 
+      objectReference: {fileID: 8747160277638396038, guid: e064573c387e5ae4abe7c46fd729f157,
         type: 3}
     - target: {fileID: 5393215578589016640, guid: c5efc39a8aaf6e64ea40e9ad573e9b47,
         type: 3}

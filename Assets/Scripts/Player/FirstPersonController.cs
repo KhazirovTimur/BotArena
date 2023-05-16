@@ -341,7 +341,7 @@ namespace StarterAssets
 
 		private void SetActiveWeapon(int weaponIndex)
 		{
-			_playerInventory.ChangeActiveWeapon(weaponIndex);
+			_playerInventory.StartWeaponChange(weaponIndex);
 		}
 
 		private static float ClampAngle(float lfAngle, float lfMin, float lfMax)

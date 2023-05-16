@@ -20,11 +20,22 @@ public class PlayerInventory : MonoBehaviour
     public List<int> WeaponsAmmo = new List<int>();
     
     //Player hands. Weapon spawns here
-    public Transform WeaponRoot;
+    public WeaponSwitcher WeaponRoot;
 
     //Which weapon is active now
     public int ActiveWeaponIndex;
+
+    private int ActiveWeaponToSet;
+
+    private bool canShoot;
+    public bool IfCanShoot => canShoot;
     
+    public Action ActiveWeaponAmmoReduced;
+    public Action WeaponWasChanged;
+    
+    private int money;
+
+    public Action MoneyAmountChanged;
 
     
 
@@ -37,9 +48,12 @@ public class PlayerInventory : MonoBehaviour
             InstantiateWeapons();
             AddAmmoToAllWeapons();
         }
-        
         ActiveWeaponIndex = 0;
+        canShoot = true;
         LeaveOneActiveWeapon(ActiveWeaponIndex);
+        WeaponRoot.WeaponWasLowered += ChangeWeaponPrefab;
+        WeaponRoot.WeaponIsReady += FinishWeaponChange;
+        WeaponWasChanged?.Invoke();
     }
     
     private bool CheckPrefabsAssigned()
@@ -56,8 +70,8 @@ public class PlayerInventory : MonoBehaviour
         
         for (int i = 0;  i < WeaponsPrefabs.Count; i++)
         {
-            GameObject weapon = Instantiate(WeaponsPrefabs[i], WeaponRoot);
-            weapon.transform.SetParent(WeaponRoot);
+            GameObject weapon = Instantiate(WeaponsPrefabs[i], WeaponRoot.transform);
+            weapon.transform.SetParent(WeaponRoot.transform);
             if (weapon.transform.TryGetComponent(out AbstractWeapon weaponScript))
             {
                 Weapons.Add(weaponScript);
@@ -84,16 +98,23 @@ public class PlayerInventory : MonoBehaviour
 
 
     //Function for weapons to let them reduce ammo
-    public void ReduceAmmoByOne()
+    public void ReduceAmmoByShot()
     {
         int ammoIndex = (int)(Weapons[ActiveWeaponIndex].GetWeaponAmmoType);
         WeaponsAmmo[ammoIndex] -= 1;
+        ActiveWeaponAmmoReduced();
     }
     
     
     //Weapons check if ammo left
     public int GetAmmo(int ammoIndex)
     {
+        return WeaponsAmmo[ammoIndex];
+    }
+    
+    public int GetActiveWeaponAmmo()
+    {
+        int ammoIndex = (int)(Weapons[ActiveWeaponIndex].GetWeaponAmmoType);
         return WeaponsAmmo[ammoIndex];
     }
     
@@ -105,26 +126,47 @@ public class PlayerInventory : MonoBehaviour
             VARIABLE.GetGameObject().SetActive(false);
         }
         Weapons[weaponIndex].GetGameObject().SetActive(true);
+        //WeaponWasChanged();
     }
 
 
-    public void ChangeActiveWeapon(int weaponIndex)
+    public void StartWeaponChange(int weaponIndex)
     {
-        Debug.Log($"change weapon to {weaponIndex}");
-        if (weaponIndex < Weapons.Count)
+        if (weaponIndex < Weapons.Count && ActiveWeaponIndex != weaponIndex)
         {
-            Weapons[ActiveWeaponIndex].GetGameObject().SetActive(false);
-            ActiveWeaponIndex = weaponIndex;
-            Weapons[ActiveWeaponIndex].GetGameObject().SetActive(true);
+            WeaponRoot.SetTrueNeedToChangeWeapon();
+            canShoot = false;
+            ActiveWeaponToSet = weaponIndex;
         }
-        Debug.Log($"active weapon is {ActiveWeaponIndex}");
     }
 
+    public void ChangeWeaponPrefab()
+    {
+        Weapons[ActiveWeaponIndex].GetGameObject().SetActive(false);
+        Weapons[ActiveWeaponToSet].GetGameObject().SetActive(true);
+        ActiveWeaponIndex = ActiveWeaponToSet;
+        WeaponWasChanged();
+    }
 
+    public void FinishWeaponChange()
+    {
+        canShoot = true;
+    }
 
 
     public void TriggerPushed(bool triggerStatePushed, Vector3 pointOnTarget)
     { 
         Weapons[ActiveWeaponIndex].TriggerPushed(triggerStatePushed, pointOnTarget);
+    }
+
+    public void AddMoney(int ToAdd)
+    {
+        money += ToAdd;
+        MoneyAmountChanged();
+    }
+
+    public int GetMoney()
+    {
+        return 0;
     }
 }

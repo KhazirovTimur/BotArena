@@ -34,7 +34,8 @@ public abstract class AbstractWeapon : MonoBehaviour
     [SerializeField]
     protected bool IsFullAuto;
 
-    [Tooltip("If true, use raycast to detect hits, instead of projectiles")] [SerializeField]
+    [Tooltip("If true, use raycast to detect hits, instead of projectiles")] 
+    [SerializeField]
     protected IShootMechanic shootMechanic;
     
     
@@ -93,11 +94,13 @@ public abstract class AbstractWeapon : MonoBehaviour
     {
         if (!_triggerIsPushed)
             return false;
-        if(!(Time.time > _delay))
+        if (!(Time.time > _delay))
             return false;
         if (!(IsFullAuto || _triggerWasReleased))
             return false;
         if (_playerInventory.GetAmmo((int)weaponAmmoType) <= 0)
+            return false;
+        if (!_playerInventory.IfCanShoot)
             return false;
         return true;
     }
@@ -106,7 +109,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected virtual void Shoot()
     {
         _triggerWasReleased = false;
-        _playerInventory.ReduceAmmoByOne();
+        _playerInventory.ReduceAmmoByShot();
         BarrelEnd.LookAt(_aim);
         RanomizeSpread();
         shootMechanic.DoShot(BarrelEnd, Damage);
@@ -125,13 +128,10 @@ public abstract class AbstractWeapon : MonoBehaviour
             BarrelEnd.localRotation.eulerAngles.z);
     }
 
-
     
-
-    //Get input 
-    public void TriggerPushed(bool triggerStatePushed, Vector3 pointOnTarget)
+    public void TriggerPushed(bool triggerState, Vector3 pointOnTarget)
     {
-        _triggerIsPushed = triggerStatePushed;
+        _triggerIsPushed = triggerState;
         _aim = pointOnTarget;
     }
 

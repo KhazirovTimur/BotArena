@@ -12,6 +12,7 @@ public class AttackPlayer : MonoBehaviour
     private Vector3 lastPlayerPosition;
     private float distanceToPlayer;
 
+    [SerializeField] private LayerMask occulingLayers;
     public float projectileSpeed;
     public GameObject projectile;
     public float delayBetweenShots = 3.0f;
@@ -22,18 +23,21 @@ public class AttackPlayer : MonoBehaviour
 
     private float timerUpdateLastPlayerPos;
 
-    private ObjectPooler _pooler;
-    private string poolIndex = "SimpleEnemy";
+    private AllObjectPoolsContainer _poolsContainer;
+    //private string poolIndex = "SimpleEnemy";
+    private string poolIndex;
+    
     
     
 
     // Start is called before the first frame update
     void Start()
     {
+        poolIndex = gameObject.name;
         playerTransform = FindObjectOfType<FirstPersonController>().transform;
         shotTimer = delayBetweenShots;
-        _pooler = FindObjectOfType<ObjectPooler>();
-        _pooler.AddPool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
+        _poolsContainer = FindObjectOfType<AllObjectPoolsContainer>();
+        _poolsContainer.AddPool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
         timerUpdateLastPlayerPos = delayUpdateLastPlayerPos;
     }
 
@@ -55,29 +59,17 @@ public class AttackPlayer : MonoBehaviour
             timerUpdateLastPlayerPos = Time.time + delayUpdateLastPlayerPos;
         }
     }
-    
+
+
 
     private bool CanShoot()
     {
-        bool canShot = false;
-        //Debug.Log("scanning");
-        //Debug.DrawLine(transform.position + transform.up, playerTransform.position + playerTransform.up, Color.red, 1.0f);
-        if (Physics.Raycast(transform.position + transform.up, playerTransform.position - transform.position + playerTransform.up,
-                out RaycastHit hit, 1000))
+        if (Physics.Linecast(transform.position + Vector3.up, playerTransform.position + Vector3.up, occulingLayers))
         {
-           // Debug.Log("See smth");
-           if (hit.transform.TryGetComponent<PlayerHealth>(out PlayerHealth target))
-            {
-                canShot = true;
-                distanceToPlayer = hit.distance;
-                //Debug.Log("i see you");
-            }
+            return false;
         }
-        else
-        {
-           // Debug.Log("Doesn't hit((");
-        }
-        return canShot;
+        distanceToPlayer = (playerTransform.position - transform.position).magnitude;
+        return true;
     }
     
     
@@ -85,7 +77,7 @@ public class AttackPlayer : MonoBehaviour
 
     private void Shoot()
     {
-        IPoolable project = _pooler.GetPool(poolIndex).Get();
+        IPoolable project = _poolsContainer.GetPool(poolIndex).Get();
         project.GetGameObject().transform.position = transform.position + transform.up;
         project.GetGameObject().transform.LookAt(PredictPlayerPosition());
         IProjectile bullet = project.GetGameObject().GetComponent<IProjectile>();

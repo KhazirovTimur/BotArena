@@ -10,11 +10,10 @@ public class Shotgun : AbstractWeapon
    protected override void Shoot()
    {
       _triggerWasReleased = false;
-      _playerInventory.ReduceAmmoByOne();
+      _playerInventory.ReduceAmmoByShot();
       for (int i = 0; i < ProjectilesPerShot; i++)
       {
          BarrelEnd.LookAt(_aim);
-         //adding spread
          RanomizeSpread();
          shootMechanic.DoShot(BarrelEnd, Damage);
       }

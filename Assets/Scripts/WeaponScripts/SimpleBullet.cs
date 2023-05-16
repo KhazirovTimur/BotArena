@@ -22,7 +22,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private float _endOfLife;
     
     //cache for object pool
-    private ObjectPooler _pooler;
+    private AllObjectPoolsContainer _poolsContainer;
     private string _poolIndex;
 
 
@@ -54,7 +54,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private void CheckDestroyTimer()
     {
         if(Time.time > _endOfLife)
-            _pooler.GetPool(_poolIndex).Release(this);
+            _poolsContainer.GetPool(_poolIndex).Release(this);
     }
 
 
@@ -74,15 +74,15 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
             {
                 target.TakeDamage(_damage);
             }
-            _pooler.GetPool(_poolIndex).Release(this);
+            _poolsContainer.GetPool(_poolIndex).Release(this);
         }
     }
 
     
     
-    public void SetParentPool(ObjectPooler pooler, string index)
+    public void SetParentPool(AllObjectPoolsContainer poolsContainer, string index)
     {
-        _pooler = pooler;
+        _poolsContainer = poolsContainer;
         _poolIndex = index;
     }
 

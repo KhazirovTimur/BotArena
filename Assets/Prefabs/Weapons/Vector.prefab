@@ -466,7 +466,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2406743053042463410}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &7295554758702854540
+--- !u!114 &3259850367643133050
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -570,7 +570,7 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 2406743053042463410}
   m_PrefabAsset: {fileID: 0}
---- !u!114 &399370293
+--- !u!114 &7295554758702854540
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -708,6 +708,9 @@ MonoBehaviour:
   projectile: {fileID: 7716959810933316257, guid: 3f1eb7609e9b8d846b47bb84ba366083,
     type: 3}
   projectileSpeed: 100
+  occlusionLayers:
+    serializedVersion: 2
+    m_Bits: 65
 --- !u!114 &3668125952304493682
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -743,5 +746,5 @@ MonoBehaviour:
   rateOfFire: 1000
   SpreadAngle: 1
   IsFullAuto: 1
-  BarrelEnd: {fileID: 5055533325294323932}
+  barrelEnd: {fileID: 5055533325294323932}
   weaponAmmoType: 1

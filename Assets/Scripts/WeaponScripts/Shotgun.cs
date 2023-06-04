@@ -13,12 +13,12 @@ public class Shotgun : AbstractWeapon
       _playerInventory.ReduceAmmoByShot();
       for (int i = 0; i < ProjectilesPerShot; i++)
       {
-         BarrelEnd.LookAt(_aim);
+         barrelEnd.LookAt(_aim);
          RanomizeSpread();
-         shootMechanic.DoShot(BarrelEnd, Damage);
+         shootMechanic.DoShot(barrelEnd, Damage);
       }
       _delay = Time.time + (60 / rateOfFire);
-      BarrelEnd.LookAt(_aim);
+      barrelEnd.LookAt(_aim);
       ShotWasMade();
 
    }

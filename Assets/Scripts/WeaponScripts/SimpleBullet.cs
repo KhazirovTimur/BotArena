@@ -8,6 +8,7 @@ using UnityEngine.ProBuilder.MeshOperations;
 public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
 {
     
+    
     //after this time will be destroyed
     [SerializeField]
     private float _bulletLifeTime = 2.0f;
@@ -21,14 +22,15 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     //Time, when bullet must be destroyed
     private float _endOfLife;
     
+    private LayerMask occlusionLayers;
+    
     //cache for object pool
-    private AllObjectPoolsContainer _poolsContainer;
-    private string _poolIndex;
+    private ObjectPoolContainer poolContainer;
 
 
     private void OnEnable()
     {
-        ResetLifeTime();
+        ResetItem();
     }
 
     //set timer
@@ -54,7 +56,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private void CheckDestroyTimer()
     {
         if(Time.time > _endOfLife)
-            _poolsContainer.GetPool(_poolIndex).Release(this);
+            poolContainer.GetPool.Release(this);
     }
 
 
@@ -68,22 +70,25 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private void CheckObjectsAhead()
     {
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward),
-                out hit, _bulletSpeed * 0.02f))
+                out hit, _bulletSpeed * 0.02f, occlusionLayers))
         {
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
                 target.TakeDamage(_damage);
             }
-            _poolsContainer.GetPool(_poolIndex).Release(this);
+            poolContainer.GetPool.Release(this);
         }
     }
 
-    
-    
-    public void SetParentPool(AllObjectPoolsContainer poolsContainer, string index)
+
+    public void SetOcclusionLayers(LayerMask mask)
     {
-        _poolsContainer = poolsContainer;
-        _poolIndex = index;
+        occlusionLayers = mask;
+    }
+
+    public void SetParentPool(ObjectPoolContainer poolsContainer)
+    {
+        poolContainer = poolsContainer;
     }
 
     public GameObject GetGameObject()
@@ -111,7 +116,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         _bulletSpeed = speed;
     }
 
-    public void ResetLifeTime()
+    public void ResetItem()
     {
         _endOfLife = Time.time + _bulletLifeTime;
     }

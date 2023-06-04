@@ -6,6 +6,9 @@ TagManager:
   tags:
   - CinemachineTarget
   - Enemy
+  - WeaponCamera
+  - WeaponFollowCamera
+  - Loot
   layers:
   - Default
   - TransparentFX
@@ -13,12 +16,12 @@ TagManager:
   - 
   - Water
   - UI
-  - 
+  - Damagable
   - Weapon
   - Character
   - Ground
-  - 
-  - 
+  - Loot
+  - LootCollector
   - 
   - 
   - 

@@ -23,9 +23,8 @@ public class AttackPlayer : MonoBehaviour
 
     private float timerUpdateLastPlayerPos;
 
-    private AllObjectPoolsContainer _poolsContainer;
-    //private string poolIndex = "SimpleEnemy";
-    private string poolIndex;
+    private ObjectPoolContainer objectPoolContainer;
+
     
     
     
@@ -33,11 +32,11 @@ public class AttackPlayer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        poolIndex = gameObject.name;
         playerTransform = FindObjectOfType<FirstPersonController>().transform;
         shotTimer = delayBetweenShots;
-        _poolsContainer = FindObjectOfType<AllObjectPoolsContainer>();
-        _poolsContainer.AddPool(projectile.GetComponent<IPoolable>(), 50, poolIndex);
+        //if(!objectPoolContainer)
+           // objectPoolContainer = FindObjectOfType<AllObjectPoolsContainer>()
+             //   .CreateNewPool(projectile.GetComponent<IPoolable>(), 50);
         timerUpdateLastPlayerPos = delayUpdateLastPlayerPos;
     }
 
@@ -72,17 +71,21 @@ public class AttackPlayer : MonoBehaviour
         return true;
     }
     
-    
-    
 
     private void Shoot()
     {
-        IPoolable project = _poolsContainer.GetPool(poolIndex).Get();
+        IPoolable project = objectPoolContainer.GetPool.Get();
         project.GetGameObject().transform.position = transform.position + transform.up;
         project.GetGameObject().transform.LookAt(PredictPlayerPosition());
         IProjectile bullet = project.GetGameObject().GetComponent<IProjectile>();
         bullet.SetSpeed(projectileSpeed);
         
+    }
+
+
+    public void SetObjectPoolContainer(ObjectPoolContainer poolContainer)
+    {
+        objectPoolContainer = poolContainer;
     }
 
     private Vector3 PredictPlayerPosition()
@@ -110,7 +113,7 @@ public class AttackPlayer : MonoBehaviour
     {
         shotTimer = Time.time + delayBetweenShots;
     }
-
+    
 
 
 }

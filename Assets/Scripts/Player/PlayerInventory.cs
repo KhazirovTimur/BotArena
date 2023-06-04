@@ -6,7 +6,7 @@ using UnityEngine;
 
 //Contains players weapons and ammo
 
-public class PlayerInventory : MonoBehaviour
+public class PlayerInventory : MonoBehaviour, ICollector
 {
 
     [Tooltip("Fill here weapons prefabs")]
@@ -159,14 +159,14 @@ public class PlayerInventory : MonoBehaviour
         Weapons[ActiveWeaponIndex].TriggerPushed(triggerStatePushed, pointOnTarget);
     }
 
-    public void AddMoney(int ToAdd)
+    public void AddValue(int value)
     {
-        money += ToAdd;
+        money += value;
         MoneyAmountChanged();
     }
 
     public int GetMoney()
     {
-        return 0;
+        return money;
     }
 }

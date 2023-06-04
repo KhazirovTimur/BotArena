@@ -1,4 +1,5 @@
 ﻿using System;
+using Cinemachine;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -16,8 +17,6 @@ namespace StarterAssets
 		[Header("Player")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 12.0f;
-		[Tooltip("Sprint speed of the character in m/s")]
-		public float SprintSpeed = 6.0f;
 		[Tooltip("Rotation speed of the character")]
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
@@ -66,6 +65,8 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		public float WeaponWalkingShakeCoef = 0.28f;
+
 		// cinemachine
 		private float _cinemachineTargetPitch;
 
@@ -94,6 +95,8 @@ namespace StarterAssets
 		private CharacterController _controller;
 		private StarterAssetsInputs _input;
 		private GameObject _mainCamera;
+		private CinemachineVirtualCamera _weaponFollowCamera;
+		private CinemachineBasicMultiChannelPerlin _weaponCameraNoise;
 
 		private const float _threshold = 0.01f;
 
@@ -111,11 +114,9 @@ namespace StarterAssets
 
 		private void Awake()
 		{
-			// get a reference to our main camera
-			if (_mainCamera == null)
-			{
-				_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
-			}
+			_mainCamera = GameObject.FindGameObjectWithTag("MainCamera");
+			_weaponFollowCamera = GameObject.FindGameObjectWithTag("WeaponFollowCamera")
+				.GetComponent<CinemachineVirtualCamera>();
 		}
 
 		private void Start()
@@ -142,6 +143,7 @@ namespace StarterAssets
 			Move();
 			Dash();
 			TriggerPushed();
+			WeaponWalkingAnimation();
 		}
 
 		private void LateUpdate()
@@ -273,6 +275,18 @@ namespace StarterAssets
 			{
 				_verticalVelocity += Gravity * Time.deltaTime;
 			}
+		}
+
+		private void WeaponWalkingAnimation()
+		{
+			if (!Grounded || InDash)
+			{
+				_weaponFollowCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 0;
+				return;
+			}
+
+			_weaponFollowCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 
+				_controller.velocity.magnitude * WeaponWalkingShakeCoef;
 		}
 
 

@@ -34,7 +34,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     [SerializeField]
     protected bool IsFullAuto;
 
-    [Tooltip("If true, use raycast to detect hits, instead of projectiles")] 
+    [Tooltip("Attach projectile or raycast shooting mechanic")] 
     [SerializeField]
     protected IShootMechanic shootMechanic;
     
@@ -43,10 +43,13 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Header("Other settings")]
     [Tooltip("Transform of empty gameobject at the end of barrel. Bullets spawn on this transform")]
     [SerializeField]
-    protected Transform BarrelEnd;
+    protected Transform barrelEnd;
     [SerializeField]
     protected AmmoTypes.Ammotypes weaponAmmoType;
     public AmmoTypes.Ammotypes GetWeaponAmmoType => weaponAmmoType;
+    
+    //[SerializeField]
+   // private ParticleSystem muzzleFlash;
 
     //Action for recoil
     public Action ShotWasMade;
@@ -64,20 +67,21 @@ public abstract class AbstractWeapon : MonoBehaviour
     //Where player is aiming
     protected Vector3 _aim;
 
+    
+    
+    
 
     
-    
-
-    
-    void Start()
+    protected void Start()
     {
         _triggerIsPushed = false;
         _triggerWasReleased = true;
         shootMechanic = GetComponent<IShootMechanic>();
         _playerInventory = FindObjectOfType<PlayerInventory>();
+       // muzzleFlash.transform.position = barrelEnd.transform.position;
     }
 
-    //Check requirements to make shot
+
     protected virtual void Update()
     {
         if (!_triggerIsPushed)
@@ -89,7 +93,7 @@ public abstract class AbstractWeapon : MonoBehaviour
         
     }
 
-    
+    //Check requirements to make shot
     protected virtual bool ShotRequirements()
     {
         if (!_triggerIsPushed)
@@ -108,24 +112,26 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     protected virtual void Shoot()
     {
+       // muzzleFlash.Play();
         _triggerWasReleased = false;
         _playerInventory.ReduceAmmoByShot();
-        BarrelEnd.LookAt(_aim);
+        barrelEnd.LookAt(_aim);
         RanomizeSpread();
-        shootMechanic.DoShot(BarrelEnd, Damage);
+        shootMechanic.DoShot(barrelEnd, Damage);
         _delay = Time.time + (60.0f/rateOfFire);
-        BarrelEnd.LookAt(_aim);
+        barrelEnd.LookAt(_aim);
         ShotWasMade();
+        
     }
 
 
 
     protected virtual void RanomizeSpread()
     {
-        BarrelEnd.localRotation =  Quaternion.Euler(
-            BarrelEnd.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
-            BarrelEnd.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
-            BarrelEnd.localRotation.eulerAngles.z);
+        barrelEnd.localRotation =  Quaternion.Euler(
+            barrelEnd.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
+            barrelEnd.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
+            barrelEnd.localRotation.eulerAngles.z);
     }
 
     

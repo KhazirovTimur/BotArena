@@ -25,7 +25,8 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private LayerMask occlusionLayers;
     
     //cache for object pool
-    private ObjectPoolContainer poolContainer;
+    private ObjectPoolContainer _selfPoolContainer;
+    private ObjectPoolContainer _hitEffectPoolContainer;
 
 
     private void OnEnable()
@@ -56,7 +57,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private void CheckDestroyTimer()
     {
         if(Time.time > _endOfLife)
-            poolContainer.GetPool.Release(this);
+            _selfPoolContainer.GetPool.Release(this);
     }
 
 
@@ -76,7 +77,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
             {
                 target.TakeDamage(_damage);
             }
-            poolContainer.GetPool.Release(this);
+            _selfPoolContainer.GetPool.Release(this);
         }
     }
 
@@ -88,7 +89,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
 
     public void SetParentPool(ObjectPoolContainer poolsContainer)
     {
-        poolContainer = poolsContainer;
+        _selfPoolContainer = poolsContainer;
     }
 
     public GameObject GetGameObject()
@@ -121,7 +122,10 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         _endOfLife = Time.time + _bulletLifeTime;
     }
 
-
+    public void SetHitEffectsPool(ObjectPoolContainer effectsPool)
+    {
+        _hitEffectPoolContainer = effectsPool;
+    }
 
 
 

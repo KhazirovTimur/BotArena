@@ -7,16 +7,16 @@ public class ProjectileShot : MonoBehaviour, IShootMechanic
 {
     [Header("Projectile settings")]
     [Tooltip("If raycast is false, fill projectile here")]
-    [SerializeField]
-    protected GameObject projectile;
+    [SerializeField] protected GameObject projectile;
     [Tooltip("Speed of projectile")]
-    [SerializeField]
-    protected float projectileSpeed;
-    
-    public LayerMask occlusionLayers;
+    [SerializeField] protected float projectileSpeed;
+    [SerializeField] private LayerMask occlusionLayers;
+    [Header("Hit effect reference")]
+    [SerializeField] private GameObject hitEffect;
     
     //cache for projectiles pool
     private ObjectPoolContainer projectilePoolContainer;
+    private ObjectPoolContainer _hitEffectsPool;
 
     private AbstractWeapon thisWeapon;
 
@@ -25,6 +25,8 @@ public class ProjectileShot : MonoBehaviour, IShootMechanic
         thisWeapon = GetComponent<AbstractWeapon>();
         projectilePoolContainer = FindObjectOfType<AllObjectPoolsContainer>().
             CreateNewPool(projectile.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
+        _hitEffectsPool = FindObjectOfType<AllObjectPoolsContainer>()
+            .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
     }
 
     public void DoShot(Transform barrelEnd, float damage)

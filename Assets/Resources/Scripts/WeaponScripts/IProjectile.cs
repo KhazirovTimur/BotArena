@@ -11,6 +11,6 @@ public interface IProjectile
     public void SetDamage(float damage);
     public void SetSpeed(float speed);
     public void ResetItem();
-
     public void SetOcclusionLayers(LayerMask mask);
+    public void SetHitEffectsPool(ObjectPoolContainer effectsPool);
 }

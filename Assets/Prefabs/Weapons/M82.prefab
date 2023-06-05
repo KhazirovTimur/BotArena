@@ -49,7 +49,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   occlusionLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 577
 --- !u!114 &4522364554871826792
 MonoBehaviour:
   m_ObjectHideFlags: 0

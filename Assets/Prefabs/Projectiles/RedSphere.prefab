@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8311280179571026459}
   - component: {fileID: 2486403560559619764}
   - component: {fileID: 5154543085330325436}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: RedSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

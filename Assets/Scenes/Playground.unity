@@ -1180,7 +1180,7 @@ PrefabInstance:
     - target: {fileID: 1734855947861129051, guid: d5132dbc517265d4d99e95ca45557586,
         type: 3}
       propertyPath: m_CullingMask.m_Bits
-      value: 1911
+      value: 6007
       objectReference: {fileID: 0}
     - target: {fileID: 2026934915201735620, guid: d5132dbc517265d4d99e95ca45557586,
         type: 3}
@@ -1653,6 +1653,11 @@ PrefabInstance:
         type: 3}
       propertyPath: m_Name
       value: PlayerCapsule
+      objectReference: {fileID: 0}
+    - target: {fileID: 2884593707129929269, guid: ca7aaf8ac733a654fa26e96e1ea1c8ef,
+        type: 3}
+      propertyPath: targetRaycastOcclusionLayers.m_Bits
+      value: 577
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca7aaf8ac733a654fa26e96e1ea1c8ef, type: 3}

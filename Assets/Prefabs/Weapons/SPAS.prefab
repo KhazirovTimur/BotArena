@@ -383,7 +383,7 @@ MonoBehaviour:
   projectileSpeed: 60
   occlusionLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 577
 --- !u!114 &7896588222829792789
 MonoBehaviour:
   m_ObjectHideFlags: 0

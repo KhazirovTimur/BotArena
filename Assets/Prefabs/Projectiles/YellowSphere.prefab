@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6814343268697761605}
   - component: {fileID: 1101000976324797418}
   - component: {fileID: 7660180897333891810}
-  m_Layer: 0
+  m_Layer: 12
   m_Name: YellowSphere
   m_TagString: Untagged
   m_Icon: {fileID: 0}

@@ -66,6 +66,8 @@ namespace StarterAssets
 		public float BottomClamp = -90.0f;
 
 		public float WeaponWalkingShakeCoef = 0.28f;
+		
+		public LayerMask targetRaycastOcclusionLayers;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -292,16 +294,8 @@ namespace StarterAssets
 
 		private void TriggerPushed()
 		{
-			// Bit shift the index of the layer (8) to get a bit mask
-			int layerMask = 1 << 8;
-
-			// This would cast rays only against colliders in layer 8.
-			// But instead we want to collide against everything except layer 8. The ~ operator does this, it inverts a bitmask.
-			layerMask = ~layerMask;
-
-			
 			//Always send information: "Is player pushing fire button or not?"; "Where is he aiming?"
-			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, layerMask))
+			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetRaycastOcclusionLayers))
 			{
 				_playerInventory.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.TransformDirection(Vector3.forward) * hit.distance));
 			}

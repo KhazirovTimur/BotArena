@@ -122,7 +122,7 @@ MonoBehaviour:
   projectileSpeed: 70
   occlusionLayers:
     serializedVersion: 2
-    m_Bits: 65
+    m_Bits: 577
 --- !u!1 &7315332998895804736
 GameObject:
   m_ObjectHideFlags: 0

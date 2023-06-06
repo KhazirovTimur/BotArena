@@ -50,6 +50,8 @@ MonoBehaviour:
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 577
+  hitEffect: {fileID: 7807375849227135412, guid: a3576071fb9831644a8cf7cc00dbc929,
+    type: 3}
 --- !u!114 &4522364554871826792
 MonoBehaviour:
   m_ObjectHideFlags: 0

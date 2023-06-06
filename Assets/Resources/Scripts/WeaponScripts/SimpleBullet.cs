@@ -27,6 +27,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     //cache for object pool
     private ObjectPoolContainer _selfPoolContainer;
     private ObjectPoolContainer _hitEffectPoolContainer;
+    
 
 
     private void OnEnable()
@@ -73,6 +74,11 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward),
                 out hit, _bulletSpeed * 0.02f, occlusionLayers))
         {
+            IPoolable bulletHole = _hitEffectPoolContainer.GetPool.Get();
+            GameObject newHole = bulletHole.GetGameObject();
+            newHole.transform.position = hit.point;
+            newHole.transform.rotation = Quaternion.FromToRotation(newHole.transform.forward, -hit.normal);
+            newHole.transform.SetParent(hit.transform);
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
                 target.TakeDamage(_damage);
@@ -127,6 +133,10 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         _hitEffectPoolContainer = effectsPool;
     }
 
-
+    public bool HaveHitEffectPool()
+    {
+        return _hitEffectPoolContainer;
+    }
+    
 
 }

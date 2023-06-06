@@ -39,5 +39,7 @@ public class ProjectileShot : MonoBehaviour, IShootMechanic
         bullet.SetSpeed(projectileSpeed);
         bullet.ResetItem();
         bullet.SetOcclusionLayers(occlusionLayers);
+        if(!bullet.HaveHitEffectPool())
+            bullet.SetHitEffectsPool(_hitEffectsPool);
     }
 }

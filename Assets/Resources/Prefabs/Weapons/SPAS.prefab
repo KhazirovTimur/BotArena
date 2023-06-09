@@ -404,5 +404,6 @@ MonoBehaviour:
   SpreadAngle: 3
   IsFullAuto: 0
   barrelEnd: {fileID: 1627338767436322255}
+  minStandartShotDistance: 2
   weaponAmmoType: 2
   ProjectilesPerShot: 7

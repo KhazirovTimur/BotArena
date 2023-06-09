@@ -22,10 +22,10 @@ public class ObjectPoolContainer : MonoBehaviour
             },
             gameobj =>
             {
-                gameobj.GetFromPool(); 
+                gameobj.OnGetFromPool(); 
                 gameobj.ResetItem();
             },
-            gameobj => { gameobj.ReleaseToPool(); },
+            gameobj => { gameobj.OnReleaseToPool(); },
             gameobj => { Destroy(gameobj.GetGameObject()); },
             true, defaultCapacity, 500);
         return this;

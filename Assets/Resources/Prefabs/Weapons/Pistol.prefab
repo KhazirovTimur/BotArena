@@ -99,11 +99,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponName: Pistol
-  Damage: 45
+  Damage: 20
   rateOfFire: 330
   SpreadAngle: 0.5
   IsFullAuto: 0
   barrelEnd: {fileID: 5894651146036158769}
+  minStandartShotDistance: 1
   weaponAmmoType: 0
 --- !u!114 &2966815855682295446
 MonoBehaviour:

@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitDecals : MonoBehaviour, IPoolable
+public class HitDecals : MonoBehaviour, IPoolable, IHardReleasedToPool
 {
     [SerializeField] public float dissapearTimer = 5f;
     
@@ -15,7 +15,7 @@ public class HitDecals : MonoBehaviour, IPoolable
         ResetItem();
     }
 
-    public void GetFromPool()
+    public void OnGetFromPool()
     {
         gameObject.SetActive(true);
     }
@@ -25,7 +25,7 @@ public class HitDecals : MonoBehaviour, IPoolable
         return gameObject;
     }
 
-    public void ReleaseToPool()
+    public void OnReleaseToPool()
     {
         transform.SetParent(_selfPool.GetComponent<Transform>());
         gameObject.SetActive(false);
@@ -48,6 +48,19 @@ public class HitDecals : MonoBehaviour, IPoolable
         {
             _selfPool.GetPool.Release(this);
         }
+    }
+
+    public void HardReleasedToPool()
+    {
+        transform.SetParent(_selfPool.GetComponent<Transform>());
+        _selfPool.GetPool.Release(this);
+    }
+
+    public void SetPosAndRotation(RaycastHit hit)
+    {
+        transform.position = hit.point;
+        transform.LookAt(transform.position + (-hit.normal));
+        transform.SetParent(hit.transform);
     }
 
     private void Update()

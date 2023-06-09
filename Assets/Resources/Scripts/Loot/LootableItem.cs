@@ -114,12 +114,12 @@ public class LootableItem : MonoBehaviour, ILootable, IPoolable
         _objectPool = poolsContainer;
     }
 
-    public void GetFromPool()
+    public void OnGetFromPool()
     {
         gameObject.SetActive(true);
     }
 
-    public void ReleaseToPool()
+    public void OnReleaseToPool()
     {
         ResetItem();
         gameObject.SetActive(false);

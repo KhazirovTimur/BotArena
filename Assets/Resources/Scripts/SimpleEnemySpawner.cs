@@ -15,6 +15,8 @@ public class SimpleEnemySpawner : MonoBehaviour
     private ObjectPoolContainer EnergyCellsPool;
 
     private int oneCellValue;
+
+    private bool timerUpdated;
     
 
 
@@ -31,10 +33,16 @@ public class SimpleEnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (timer < Time.time)
+        if (timer < Time.time && timerUpdated)
         {
             SpawnEnemy();
+            timerUpdated = false;
+        }
+
+        if (transform.childCount == 0 && !timerUpdated)
+        {
             UpdateTimer();
+            timerUpdated = true;
         }
 
     }

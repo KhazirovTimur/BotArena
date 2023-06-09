@@ -65,7 +65,7 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
-		public float WeaponWalkingShakeCoef = 0.28f;
+		public float WeaponShakeCoef = 0.28f;
 		
 		public LayerMask targetRaycastOcclusionLayers;
 
@@ -138,6 +138,8 @@ namespace StarterAssets
 			_input.ChooseWeapon += SetActiveWeapon;
 		}
 
+
+		
 		private void Update()
 		{
 			JumpAndGravity();
@@ -145,7 +147,7 @@ namespace StarterAssets
 			Move();
 			Dash();
 			TriggerPushed();
-			WeaponWalkingAnimation();
+			WeaponShakeAnimation();
 		}
 
 		private void LateUpdate()
@@ -279,7 +281,7 @@ namespace StarterAssets
 			}
 		}
 
-		private void WeaponWalkingAnimation()
+		private void WeaponShakeAnimation()
 		{
 			if (!Grounded || InDash)
 			{
@@ -288,16 +290,17 @@ namespace StarterAssets
 			}
 
 			_weaponFollowCamera.GetCinemachineComponent<CinemachineBasicMultiChannelPerlin>().m_FrequencyGain = 
-				_controller.velocity.magnitude * WeaponWalkingShakeCoef;
+				(1 + _controller.velocity.magnitude) * WeaponShakeCoef;
 		}
 
+		
 
 		private void TriggerPushed()
 		{
 			//Always send information: "Is player pushing fire button or not?"; "Where is he aiming?"
-			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.TransformDirection(Vector3.forward), out hit, Mathf.Infinity, targetRaycastOcclusionLayers))
+			if (Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.forward, out hit, Mathf.Infinity, targetRaycastOcclusionLayers))
 			{
-				_playerInventory.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.TransformDirection(Vector3.forward) * hit.distance));
+				_playerInventory.TriggerPushed(_input.triggerPushed, _mainCamera.transform.position + (_mainCamera.transform.forward * hit.distance));
 			}
 			else
 			{

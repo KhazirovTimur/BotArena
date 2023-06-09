@@ -42,4 +42,19 @@ public class ProjectileShot : MonoBehaviour, IShootMechanic
         if(!bullet.HaveHitEffectPool())
             bullet.SetHitEffectsPool(_hitEffectsPool);
     }
+    
+    public void DoCloseShot(Transform cameraRoot, float damage)
+    {
+        if (Physics.Raycast(cameraRoot.transform.position, cameraRoot.forward,
+                out RaycastHit hit, 500, occlusionLayers))
+        {
+            IPoolable bulletHole = _hitEffectsPool.GetPool.Get();
+            bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
+            if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
+            {
+                target.TakeDamage(damage);
+            }
+        }
+    }
+    
 }

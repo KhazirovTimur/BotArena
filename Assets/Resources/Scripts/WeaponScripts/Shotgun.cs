@@ -11,11 +11,25 @@ public class Shotgun : AbstractWeapon
    {
       _triggerWasReleased = false;
       _playerInventory.ReduceAmmoByShot();
-      for (int i = 0; i < ProjectilesPerShot; i++)
+      if (EnemyIsTooClose())
       {
-         barrelEnd.LookAt(_aim);
-         RanomizeSpread();
-         shootMechanic.DoShot(barrelEnd, Damage);
+         for (int i = 0; i < ProjectilesPerShot; i++)
+         {
+            _playerCameraRootTransform.LookAt(_aim);
+            RanomizeSpreadAngle(_playerCameraRootTransform);
+            shootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            _playerCameraRootTransform.LookAt(_aim);
+         }
+      }
+      else
+      {
+         for (int i = 0; i < ProjectilesPerShot; i++)
+         {
+            barrelEnd.LookAt(_aim);
+            RanomizeSpreadAngle(barrelEnd);
+            shootMechanic.DoShot(barrelEnd, Damage);  
+            barrelEnd.LookAt(_aim);
+         }
       }
       _delay = Time.time + (60 / rateOfFire);
       barrelEnd.LookAt(_aim);

@@ -42,14 +42,18 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Space(10)]
     [Header("Other settings")]
     [Tooltip("Transform of empty gameobject at the end of barrel. Bullets spawn on this transform")]
-    [SerializeField]
-    protected Transform barrelEnd;
-    [SerializeField]
-    protected AmmoTypes.Ammotypes weaponAmmoType;
+    [SerializeField] protected Transform barrelEnd;
+
+    //Transform of empty gameobject for camera root. Used for shots at very close ranges
+    protected Transform _playerCameraRootTransform;
+    [SerializeField] protected float minStandartShotDistance;
+    
+    
+    [SerializeField] protected AmmoTypes.Ammotypes weaponAmmoType;
     public AmmoTypes.Ammotypes GetWeaponAmmoType => weaponAmmoType;
     
     //[SerializeField]
-   // private ParticleSystem muzzleFlash;
+    //private ParticlesFXContainer muzzleFlash;
 
     //Action for recoil
     public Action ShotWasMade;
@@ -78,7 +82,8 @@ public abstract class AbstractWeapon : MonoBehaviour
         _triggerWasReleased = true;
         shootMechanic = GetComponent<IShootMechanic>();
         _playerInventory = FindObjectOfType<PlayerInventory>();
-       // muzzleFlash.transform.position = barrelEnd.transform.position;
+        _playerCameraRootTransform = FindObjectOfType<CameraRootForShots>().transform;
+        // muzzleFlash.transform.position = barrelEnd.transform.position;
     }
 
 
@@ -112,28 +117,42 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     protected virtual void Shoot()
     {
-       // muzzleFlash.Play();
         _triggerWasReleased = false;
         _playerInventory.ReduceAmmoByShot();
-        barrelEnd.LookAt(_aim);
-        RanomizeSpread();
-        shootMechanic.DoShot(barrelEnd, Damage);
+        if (EnemyIsTooClose())
+        {
+            _playerCameraRootTransform.LookAt(_aim);
+            RanomizeSpreadAngle(_playerCameraRootTransform);
+            shootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            _playerCameraRootTransform.LookAt(_aim);
+        }
+        else
+        {
+            barrelEnd.LookAt(_aim);
+            RanomizeSpreadAngle(barrelEnd);
+            shootMechanic.DoShot(barrelEnd, Damage);  
+            barrelEnd.LookAt(_aim);
+        }
         _delay = Time.time + (60.0f/rateOfFire);
-        barrelEnd.LookAt(_aim);
         ShotWasMade();
-        
     }
 
 
-
-    protected virtual void RanomizeSpread()
+    protected virtual void PlayShotEffects()
     {
-        barrelEnd.localRotation =  Quaternion.Euler(
-            barrelEnd.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
-            barrelEnd.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
-            barrelEnd.localRotation.eulerAngles.z);
+        //muzzleFlash.Play();
     }
 
+
+
+    protected virtual void RanomizeSpreadAngle(Transform ToRandom)
+    {
+        ToRandom.localRotation =  Quaternion.Euler(
+            ToRandom.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
+            ToRandom.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
+            ToRandom.localRotation.eulerAngles.z);
+    }
+    
     
     public void TriggerPushed(bool triggerState, Vector3 pointOnTarget)
     {
@@ -151,5 +170,16 @@ public abstract class AbstractWeapon : MonoBehaviour
     {
         return this.gameObject;
     }
+
+
+    protected virtual bool EnemyIsTooClose()
+    {
+        if ((_aim - _playerCameraRootTransform.position).magnitude < (barrelEnd.position - _playerCameraRootTransform.position).magnitude)
+            return true;
+        if ((_aim - barrelEnd.position).magnitude < minStandartShotDistance)
+            return true;
+        return false;
+    }
+
 
 }

@@ -71,14 +71,11 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     //Function prevents "tunneling" fast projectiles through objects
     private void CheckObjectsAhead()
     {
-        if (Physics.Raycast(transform.position, transform.TransformDirection(Vector3.forward),
+        if (Physics.Raycast(transform.position, transform.forward,
                 out hit, _bulletSpeed * 0.02f, occlusionLayers))
         {
             IPoolable bulletHole = _hitEffectPoolContainer.GetPool.Get();
-            GameObject newHole = bulletHole.GetGameObject();
-            newHole.transform.position = hit.point;
-            newHole.transform.rotation = Quaternion.FromToRotation(newHole.transform.forward, -hit.normal);
-            newHole.transform.SetParent(hit.transform);
+            bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
                 target.TakeDamage(_damage);
@@ -103,12 +100,12 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         return this.gameObject;
     }
 
-    public void GetFromPool()
+    public void OnGetFromPool()
     {
         this.gameObject.SetActive(true);
     }
     
-    public void ReleaseToPool()
+    public void OnReleaseToPool()
     {
         this.gameObject.SetActive(false);
     }

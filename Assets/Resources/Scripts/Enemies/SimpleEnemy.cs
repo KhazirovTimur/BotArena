@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -35,6 +36,7 @@ public class SimpleEnemy : MonoBehaviour, IDamagable
     {
         Debug.Log("I'm dead(");
         ThrowMoney();
+        ReleaseChildrenObjectsToPool();
         Destroy(this.gameObject);
     }
 
@@ -67,4 +69,12 @@ public class SimpleEnemy : MonoBehaviour, IDamagable
         cellsCount = valueInMoney / oneCellValue;
     }
 
+    private void ReleaseChildrenObjectsToPool()
+    {
+        while(transform.GetComponentInChildren<IHardReleasedToPool>() != null)
+        {    
+            transform.GetComponentInChildren<IHardReleasedToPool>().HardReleasedToPool();
+        }
+    }
+    
 }

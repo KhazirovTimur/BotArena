@@ -6,11 +6,12 @@ public interface IPoolable
 {
     public void SetParentPool(ObjectPoolContainer poolsContainer);
 
-    public void GetFromPool();
+    public void OnGetFromPool();
 
-    public void ReleaseToPool();
+    public void OnReleaseToPool();
 
     public GameObject GetGameObject();
 
     public void ResetItem();
+  
 }

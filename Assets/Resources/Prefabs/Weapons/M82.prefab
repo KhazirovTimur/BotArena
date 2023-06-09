@@ -88,6 +88,7 @@ MonoBehaviour:
   SpreadAngle: 0
   IsFullAuto: 0
   barrelEnd: {fileID: 2398832394276423785}
+  minStandartShotDistance: 2
   weaponAmmoType: 3
 --- !u!1 &5162868113365642856
 GameObject:

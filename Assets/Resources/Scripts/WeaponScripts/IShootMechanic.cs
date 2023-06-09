@@ -5,4 +5,6 @@ using UnityEngine;
 public interface IShootMechanic
 {
     public void DoShot(Transform barrelEnd, float damage);
+
+    public void DoCloseShot(Transform cameraRoot, float damage);
 }

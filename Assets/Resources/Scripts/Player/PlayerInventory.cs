@@ -75,6 +75,7 @@ public class PlayerInventory : MonoBehaviour, ICollector
             if (weapon.transform.TryGetComponent(out AbstractWeapon weaponScript))
             {
                 Weapons.Add(weaponScript);
+                weaponScript.InitializeWeapon();
             }
             else
             {

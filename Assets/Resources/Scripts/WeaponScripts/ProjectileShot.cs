@@ -6,7 +6,6 @@ using UnityEngine;
 public class ProjectileShot : MonoBehaviour, IShootMechanic
 {
     [Header("Projectile settings")]
-    [Tooltip("If raycast is false, fill projectile here")]
     [SerializeField] protected GameObject projectile;
     [Tooltip("Speed of projectile")]
     [SerializeField] protected float projectileSpeed;

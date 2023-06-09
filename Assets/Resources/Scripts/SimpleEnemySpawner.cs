@@ -33,6 +33,11 @@ public class SimpleEnemySpawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        DebugSpawnOnTimer();
+    }
+
+    private void DebugSpawnOnDeath()
+    {
         if (timer < Time.time && timerUpdated)
         {
             SpawnEnemy();
@@ -44,7 +49,15 @@ public class SimpleEnemySpawner : MonoBehaviour
             UpdateTimer();
             timerUpdated = true;
         }
+    }
 
+    private void DebugSpawnOnTimer()
+    {
+        if (timer < Time.time )
+        {
+            SpawnEnemy();
+            UpdateTimer();
+        }
     }
 
     private void SpawnEnemy()

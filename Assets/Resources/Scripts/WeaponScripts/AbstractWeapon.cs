@@ -47,6 +47,8 @@ public abstract class AbstractWeapon : MonoBehaviour
     //Transform of empty gameobject for camera root. Used for shots at very close ranges
     protected Transform _playerCameraRootTransform;
     [SerializeField] protected float minStandartShotDistance;
+
+    [SerializeField] protected AnimationCurve damageDropOff;
     
     
     [SerializeField] protected AmmoTypes.Ammotypes weaponAmmoType;
@@ -71,6 +73,10 @@ public abstract class AbstractWeapon : MonoBehaviour
     //Where player is aiming
     protected Vector3 _aim;
 
+    [SerializeField] protected AudioClip[] shotSounds;
+
+    protected AudioSource audioSource;
+
     
     
     
@@ -78,11 +84,18 @@ public abstract class AbstractWeapon : MonoBehaviour
     
     protected void Start()
     {
+        
+    }
+
+
+    public void InitializeWeapon()
+    {
         _triggerIsPushed = false;
         _triggerWasReleased = true;
         shootMechanic = GetComponent<IShootMechanic>();
         _playerInventory = FindObjectOfType<PlayerInventory>();
         _playerCameraRootTransform = FindObjectOfType<CameraRootForShots>().transform;
+        audioSource = GetComponent<AudioSource>();
         // muzzleFlash.transform.position = barrelEnd.transform.position;
     }
 
@@ -134,12 +147,15 @@ public abstract class AbstractWeapon : MonoBehaviour
             barrelEnd.LookAt(_aim);
         }
         _delay = Time.time + (60.0f/rateOfFire);
+        PlayShotEffects();
         ShotWasMade();
     }
 
 
     protected virtual void PlayShotEffects()
     {
+        //audioSource.clip = shotSounds[Random.Range(0, shotSounds.Length)];
+        audioSource.PlayOneShot(shotSounds[Random.Range(0, shotSounds.Length)]);
         //muzzleFlash.Play();
     }
 
@@ -169,6 +185,19 @@ public abstract class AbstractWeapon : MonoBehaviour
     public GameObject GetGameObject()
     {
         return this.gameObject;
+    }
+
+    public float GetReducedDamageByDistance(float distance)
+    {
+        distance = distance / 100;
+        for(int i = 0; i < damageDropOff.keys.Length; i++)
+        { 
+            if (distance < damageDropOff.keys[i].time)
+            {
+                return Damage * damageDropOff.keys[i].value;
+            }
+        }
+        return Damage * damageDropOff.keys[damageDropOff.keys.Length - 1].value;
     }
 
 

@@ -34,7 +34,7 @@ public class Shotgun : AbstractWeapon
       _delay = Time.time + (60 / rateOfFire);
       barrelEnd.LookAt(_aim);
       ShotWasMade();
-
+      PlayShotEffects();
    }
 
    protected override void Update()

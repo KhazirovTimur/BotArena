@@ -17,7 +17,7 @@ public class Shotgun : AbstractWeapon
          {
             _playerCameraRootTransform.LookAt(_aim);
             RanomizeSpreadAngle(_playerCameraRootTransform);
-            shootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            AbstractShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
             _playerCameraRootTransform.LookAt(_aim);
          }
       }
@@ -27,7 +27,7 @@ public class Shotgun : AbstractWeapon
          {
             barrelEnd.LookAt(_aim);
             RanomizeSpreadAngle(barrelEnd);
-            shootMechanic.DoShot(barrelEnd, Damage);  
+            AbstractShootMechanic.DoShot(barrelEnd, Damage);  
             barrelEnd.LookAt(_aim);
          }
       }

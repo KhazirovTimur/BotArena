@@ -36,7 +36,7 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     [Tooltip("Attach projectile or raycast shooting mechanic")] 
     [SerializeField]
-    protected IShootMechanic shootMechanic;
+    protected AbstractShootMechanic AbstractShootMechanic;
     
     
     [Space(10)]
@@ -48,14 +48,16 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected Transform _playerCameraRootTransform;
     [SerializeField] protected float minStandartShotDistance;
 
+    [Tooltip("1 sec = 100m.")]
     [SerializeField] protected AnimationCurve damageDropOff;
+    public AnimationCurve GetDamageDropOffCurve => damageDropOff;
     
     
     [SerializeField] protected AmmoTypes.Ammotypes weaponAmmoType;
-    public AmmoTypes.Ammotypes GetWeaponAmmoType => weaponAmmoType;
+    public AmmoTypes.Ammotypes GetWeaponAmmoType => weaponAmmoType; 
     
-    //[SerializeField]
-    //private ParticlesFXContainer muzzleFlash;
+    [SerializeField] private GameObject _muzzleVFXContainer;
+    private IMuzzleVFX _muzzleVFX;
 
     //Action for recoil
     public Action ShotWasMade;
@@ -76,11 +78,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     [SerializeField] protected AudioClip[] shotSounds;
 
     protected AudioSource audioSource;
-
     
-    
-    
-
     
     protected void Start()
     {
@@ -92,11 +90,12 @@ public abstract class AbstractWeapon : MonoBehaviour
     {
         _triggerIsPushed = false;
         _triggerWasReleased = true;
-        shootMechanic = GetComponent<IShootMechanic>();
+        AbstractShootMechanic = GetComponent<AbstractShootMechanic>();
         _playerInventory = FindObjectOfType<PlayerInventory>();
         _playerCameraRootTransform = FindObjectOfType<CameraRootForShots>().transform;
         audioSource = GetComponent<AudioSource>();
-        // muzzleFlash.transform.position = barrelEnd.transform.position;
+        if(_muzzleVFXContainer)
+            _muzzleVFX = _muzzleVFXContainer.GetComponent<IMuzzleVFX>();
     }
 
 
@@ -136,14 +135,14 @@ public abstract class AbstractWeapon : MonoBehaviour
         {
             _playerCameraRootTransform.LookAt(_aim);
             RanomizeSpreadAngle(_playerCameraRootTransform);
-            shootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            AbstractShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
             _playerCameraRootTransform.LookAt(_aim);
         }
         else
         {
             barrelEnd.LookAt(_aim);
             RanomizeSpreadAngle(barrelEnd);
-            shootMechanic.DoShot(barrelEnd, Damage);  
+            AbstractShootMechanic.DoShot(barrelEnd, Damage);  
             barrelEnd.LookAt(_aim);
         }
         _delay = Time.time + (60.0f/rateOfFire);
@@ -154,9 +153,12 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     protected virtual void PlayShotEffects()
     {
-        //audioSource.clip = shotSounds[Random.Range(0, shotSounds.Length)];
         audioSource.PlayOneShot(shotSounds[Random.Range(0, shotSounds.Length)]);
-        //muzzleFlash.Play();
+        if (!_muzzleVFX.IsUnityNull())
+        {
+            _muzzleVFX.PlayVFX();
+            Debug.Log("Pew");
+        }
     }
 
 
@@ -187,20 +189,7 @@ public abstract class AbstractWeapon : MonoBehaviour
         return this.gameObject;
     }
 
-    public float GetReducedDamageByDistance(float distance)
-    {
-        distance = distance / 100;
-        for(int i = 0; i < damageDropOff.keys.Length; i++)
-        { 
-            if (distance < damageDropOff.keys[i].time)
-            {
-                return Damage * damageDropOff.keys[i].value;
-            }
-        }
-        return Damage * damageDropOff.keys[damageDropOff.keys.Length - 1].value;
-    }
-
-
+    
     protected virtual bool EnemyIsTooClose()
     {
         if ((_aim - _playerCameraRootTransform.position).magnitude < (barrelEnd.position - _playerCameraRootTransform.position).magnitude)

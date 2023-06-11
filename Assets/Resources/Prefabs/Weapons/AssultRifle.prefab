@@ -133,8 +133,51 @@ MonoBehaviour:
   rateOfFire: 650
   SpreadAngle: 1
   IsFullAuto: 1
+  AbstractShootMechanic: {fileID: 0}
   barrelEnd: {fileID: 7415033343968576456}
   minStandartShotDistance: 2
+  damageDropOff:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 0.15
+      value: 1
+      inSlope: -Infinity
+      outSlope: -Infinity
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0
+    - serializedVersion: 3
+      time: 0.3
+      value: 0.75
+      inSlope: -Infinity
+      outSlope: -Infinity
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0.5
+      inSlope: -0.35714287
+      outSlope: -0.35714287
+      tangentMode: 34
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
   weaponAmmoType: 1
   shotSounds:
   - {fileID: 8300000, guid: 92d35fe1c59bbd14eaee9e3d3b54cea7, type: 3}
@@ -153,14 +196,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67095b1edd9d8314d8bf19a66cdf8ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 7716959810933316257, guid: 3f1eb7609e9b8d846b47bb84ba366083,
-    type: 3}
-  projectileSpeed: 100
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 577
   hitEffect: {fileID: 7807375849227135412, guid: a3576071fb9831644a8cf7cc00dbc929,
     type: 3}
+  projectile: {fileID: 7716959810933316257, guid: 3f1eb7609e9b8d846b47bb84ba366083,
+    type: 3}
+  projectileSpeed: 100
 --- !u!114 &3226861357211790940
 MonoBehaviour:
   m_ObjectHideFlags: 0

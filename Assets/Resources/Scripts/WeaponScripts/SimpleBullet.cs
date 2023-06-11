@@ -23,10 +23,15 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private float _endOfLife;
     
     private LayerMask occlusionLayers;
+
+    private AbstractShootMechanic _parentShooter;
+
+    private Vector3 _initialPoint;
     
     //cache for object pool
     private ObjectPoolContainer _selfPoolContainer;
     private ObjectPoolContainer _hitEffectPoolContainer;
+    
     
 
 
@@ -78,7 +83,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
             bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
-                target.TakeDamage(_damage);
+                target.TakeDamage(CountReducedDamage());
             }
             _selfPoolContainer.GetPool.Release(this);
         }
@@ -123,6 +128,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     public void ResetItem()
     {
         _endOfLife = Time.time + _bulletLifeTime;
+        _initialPoint = transform.position;
     }
 
     public void SetHitEffectsPool(ObjectPoolContainer effectsPool)
@@ -134,6 +140,25 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     {
         return _hitEffectPoolContainer;
     }
-    
+
+    public void SetParentShooter(AbstractShootMechanic parent)
+    {
+        _parentShooter = parent;
+    }
+
+    private float GetTravelDistance()
+    {
+        return (_initialPoint - transform.position).magnitude;
+    }
+
+    private float CountReducedDamage()
+    {
+        if (_parentShooter.TryGetComponent(out IProjectileShootingMechanic shootMech))
+        {
+            return shootMech.GetDamageReducedByDistanceProjectile(GetTravelDistance(), _damage);
+        }
+
+        return _damage;
+    }
 
 }

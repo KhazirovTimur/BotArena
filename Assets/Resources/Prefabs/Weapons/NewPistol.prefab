@@ -914,8 +914,9 @@ MonoBehaviour:
   rateOfFire: 330
   SpreadAngle: 0.5
   IsFullAuto: 0
+  AbstractShootMechanic: {fileID: 0}
   barrelEnd: {fileID: 6264020412126611991}
-  minStandartShotDistance: 1
+  minStandartShotDistance: 2
   damageDropOff:
     serializedVersion: 2
     m_Curve:
@@ -976,14 +977,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 67095b1edd9d8314d8bf19a66cdf8ee2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  projectile: {fileID: 7716959810933316257, guid: 7532668f2babaf843b8fed61ec12b8bb,
-    type: 3}
-  projectileSpeed: 70
   occlusionLayers:
     serializedVersion: 2
     m_Bits: 577
   hitEffect: {fileID: 7807375849227135412, guid: a3576071fb9831644a8cf7cc00dbc929,
     type: 3}
+  projectile: {fileID: 7716959810933316257, guid: 7532668f2babaf843b8fed61ec12b8bb,
+    type: 3}
+  projectileSpeed: 70
 --- !u!114 &6339569970223211895
 MonoBehaviour:
   m_ObjectHideFlags: 0

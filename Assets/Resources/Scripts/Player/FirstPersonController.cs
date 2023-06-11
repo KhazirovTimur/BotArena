@@ -21,6 +21,9 @@ namespace StarterAssets
 		public float RotationSpeed = 1.0f;
 		[Tooltip("Acceleration and deceleration")]
 		public float SpeedChangeRate = 10.0f;
+		
+		[Space(10)]
+		[Header("Dash")]
 		[Tooltip("Dash initial speed")]
 		public float DashStartSpeed = 26.0f;
 		[Tooltip("Time required to pass before being able to dash again. Set to 0f to instantly dash again")]
@@ -30,9 +33,7 @@ namespace StarterAssets
 		[Tooltip("If the character is in dash or not")]
 		[HideInInspector]
 		public bool InDash = false;
-		[Tooltip("Direction of dash")]
-		[HideInInspector]
-		public Vector3 DashCurrentDirection;
+
 		
 
 		[Space(10)]
@@ -77,14 +78,17 @@ namespace StarterAssets
 		private float _rotationVelocity;
 		private float _verticalVelocity;
 		private float _terminalVelocity = 53.0f;
+		
+		//dash
+		private Vector3 DashCurrentDirection;
+		private float _dashTimeoutDelta;
+		private float _dashTimeDelta;
+		
 
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
 		private float _fallTimeoutDelta;
-		private float _dashTimeoutDelta;
-		private float _dashTimeDelta;
-
-	
+		
 		//Link to player inventory
 		private PlayerInventory _playerInventory;
 

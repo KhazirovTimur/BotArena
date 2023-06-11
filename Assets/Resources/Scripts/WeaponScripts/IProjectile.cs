@@ -13,6 +13,6 @@ public interface IProjectile
     public void ResetItem();
     public void SetOcclusionLayers(LayerMask mask);
     public void SetHitEffectsPool(ObjectPoolContainer effectsPool);
-
     public bool HaveHitEffectPool();
+    public void SetParentShooter(AbstractShootMechanic parent);
 }

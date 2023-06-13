@@ -5,5 +5,6 @@ using UnityEngine;
 public interface IMuzzleVFX
 {
     public void PlayVFX();
-    
+
+    public Transform GetBarrelEnd();
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using Cinemachine;
+using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph.Internal;
 using UnityEngine;
 #if ENABLE_INPUT_SYSTEM && STARTER_ASSETS_PACKAGES_CHECKED
@@ -14,7 +15,7 @@ namespace StarterAssets
 #endif
 	public class FirstPersonController : MonoBehaviour
 	{
-		[Header("Player")]
+		[Header("Move")]
 		[Tooltip("Move speed of the character in m/s")]
 		public float MoveSpeed = 12.0f;
 		[Tooltip("Rotation speed of the character")]
@@ -33,22 +34,17 @@ namespace StarterAssets
 		[Tooltip("If the character is in dash or not")]
 		[HideInInspector]
 		public bool InDash = false;
-
 		
-
 		[Space(10)]
+		[Header("Jump")]
 		[Tooltip("The height the player can jump")]
 		public float JumpHeight = 1.2f;
 		[Tooltip("The character uses its own gravity value. The engine default is -9.81f")]
 		public float Gravity = -15.0f;
-
-		[Space(10)]
 		[Tooltip("Time required to pass before being able to jump again. Set to 0f to instantly jump again")]
 		public float JumpTimeout = 0.1f;
 		[Tooltip("Time required to pass before entering the fall state. Useful for walking down stairs")]
 		public float FallTimeout = 0.15f;
-
-		[Header("Player Grounded")]
 		[Tooltip("If the character is grounded or not. Not part of the CharacterController built in grounded check")]
 		public bool Grounded = true;
 		[Tooltip("Useful for rough ground")]
@@ -66,9 +62,15 @@ namespace StarterAssets
 		[Tooltip("How far in degrees can you move the camera down")]
 		public float BottomClamp = -90.0f;
 
+		[Space(10)]
+		[Header("Weapons")]
 		public float WeaponShakeCoef = 0.28f;
-		
 		public LayerMask targetRaycastOcclusionLayers;
+
+		[Space(10)] 
+		[Header("Interactions")] 
+		public LayerMask interactionRaycastLayers;
+		public float interactDistance;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -152,6 +154,7 @@ namespace StarterAssets
 			Dash();
 			TriggerPushed();
 			WeaponShakeAnimation();
+			Interaction();
 		}
 
 		private void LateUpdate()
@@ -352,6 +355,20 @@ namespace StarterAssets
 
 			}
 
+		}
+
+		private void Interaction()
+		{
+			if(Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.forward, out RaycastHit hit, interactDistance,interactionRaycastLayers))
+			{
+				if (!_input.interact)
+					return;
+				if (hit.transform.TryGetComponent(out IInteractable interactItem))
+				{
+					interactItem.OnInteraction(_playerInventory);
+					_input.interact = false;
+				}
+			}
 		}
 
 		private void SetActiveWeapon(int weaponIndex)

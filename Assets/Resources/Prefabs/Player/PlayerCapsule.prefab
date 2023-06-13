@@ -166,7 +166,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1532403028552400226}
   m_LocalRotation: {x: 0.5, y: 0.5, z: -0.5, w: 0.5}
-  m_LocalPosition: {x: 0.112, y: -0.31800008, z: 0.044}
+  m_LocalPosition: {x: 0.301, y: -0.443, z: -0.411}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -249,9 +249,8 @@ MonoBehaviour:
   SpeedChangeRate: 10
   DashStartSpeed: 50
   DashTimeout: 0.3
-  DashTime: 0.15
+  DashTime: 0.2
   InDash: 0
-  DashCurrentDirection: {x: 0, y: 0, z: 0}
   JumpHeight: 1.2
   Gravity: -15
   JumpTimeout: 0.1
@@ -265,10 +264,14 @@ MonoBehaviour:
   CinemachineCameraTarget: {fileID: 7421432476427061097}
   TopClamp: 89
   BottomClamp: -89
-  WeaponWalkingShakeCoef: 0.25
+  WeaponShakeCoef: 0.28
   targetRaycastOcclusionLayers:
     serializedVersion: 2
     m_Bits: 577
+  interactionRaycastLayers:
+    serializedVersion: 2
+    m_Bits: 8192
+  interactDistance: 2
 --- !u!114 &4965304252457391298
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -303,6 +306,7 @@ MonoBehaviour:
   jump: 0
   triggerPushed: 0
   dash: 0
+  interact: 0
   analogMovement: 0
   cursorLocked: 1
   cursorInputForLook: 1
@@ -398,8 +402,28 @@ MonoBehaviour:
     m_ActionName: Player/Sprint[/Keyboard/leftShift,/XInputControllerWindows/leftTrigger]
   - m_PersistentCalls:
       m_Calls: []
-    m_ActionId: e4ce1614-c754-48c1-9103-33130441661f
-    m_ActionName: UI/New action
+    m_ActionId: bac3f8a5-1d62-4b83-88e8-9c85c8a0a6d1
+    m_ActionName: Player/Shoot[/Mouse/leftButton,/DualSenseGamepadHID/rightTrigger]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 1bff2044-6b84-47df-9b9a-012c526a8e6c
+    m_ActionName: Player/Dash[/Keyboard/leftShift]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 8e236563-34a8-421e-95f4-c0685ea05cfc
+    m_ActionName: Player/ChooseWeapon1[/Keyboard/1]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: cf78d2ec-628e-4db8-bf6b-eef7bf4ee7c1
+    m_ActionName: Player/ChooseWeapon2[/Keyboard/2]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 65bae789-6384-4e24-ac0a-38ab997bb54a
+    m_ActionName: Player/ChooseWeapon3[/Keyboard/3]
+  - m_PersistentCalls:
+      m_Calls: []
+    m_ActionId: 5da0332c-8084-418a-9b63-27bd18fd60c8
+    m_ActionName: Player/ChooseWeapon4[/Keyboard/4]
   m_NeverAutoSwitchControlSchemes: 0
   m_DefaultControlScheme: KeyboardMouse
   m_DefaultActionMap: Player
@@ -465,10 +489,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   WeaponsPrefabs:
-  - {fileID: 7315024042668099302, guid: c6350d16b9b690c45a68dcbeee456564, type: 3}
-  - {fileID: 9132996110981935019, guid: 0f37d5ab8f633e04aa4f170d64a60a20, type: 3}
-  - {fileID: 5162868111772414421, guid: 4cbc1f5fc5bb2ca4eb446036dfeda902, type: 3}
-  - {fileID: 8747160277638396038, guid: e064573c387e5ae4abe7c46fd729f157, type: 3}
+  - {fileID: 5887835040445336801, guid: 17647bd8df7a1594ca0126c93f9a80e4, type: 3}
+  - {fileID: 6462691489836562962, guid: 4d5f8c71885cd4a439a1409cdb1260c4, type: 3}
+  - {fileID: 6763187259365077720, guid: aa1c14335a0f8684d88e0f2977ef8d5b, type: 3}
+  - {fileID: 3875823344045355233, guid: e2c6e18ff14bd5641ab9f82e8d78e548, type: 3}
   Weapons: []
   WeaponsAmmo: 
   WeaponRoot: {fileID: 1532403028352766281}
@@ -558,7 +582,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ec426fa7cb943924fbdb28e4022c4023, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  changeSpeed: 30
+  changeSpeed: 25
   weaponSwitchPoint: {fileID: 1532403028552400229}
 --- !u!1 &7421432476427061097
 GameObject:

@@ -81,6 +81,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   weaponName: Shotgun
+  weapon: 1
   Damage: 15
   rateOfFire: 90
   SpreadAngle: 3
@@ -130,7 +131,8 @@ MonoBehaviour:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
-  weaponAmmoType: 2
+  weaponAmmoType: 4
+  _muzzleVFXContainer: {fileID: 0}
   shotSounds:
   - {fileID: 8300000, guid: 181c68120cf5c6048897a415bc077598, type: 3}
   ProjectilesPerShot: 7

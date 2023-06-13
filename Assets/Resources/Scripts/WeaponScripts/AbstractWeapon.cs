@@ -15,10 +15,14 @@ public abstract class AbstractWeapon : MonoBehaviour
 {
     
     
-    [FormerlySerializedAs("Name")] [Tooltip("Weapon name")]
+    [Tooltip("Weapon name")]
     [SerializeField]
     protected string weaponName;
     public string GetWeaponName => weaponName;
+
+    [SerializeField] protected WeaponsEnums.Weapons weapon;
+    public WeaponsEnums.Weapons GetWeapon => weapon;
+    
     
     [Space(10)]
     [Header("Weapon stats")]
@@ -53,8 +57,8 @@ public abstract class AbstractWeapon : MonoBehaviour
     public AnimationCurve GetDamageDropOffCurve => damageDropOff;
     
     
-    [SerializeField] protected AmmoTypes.Ammotypes weaponAmmoType;
-    public AmmoTypes.Ammotypes GetWeaponAmmoType => weaponAmmoType; 
+    [SerializeField] protected WeaponsEnums.Ammotypes weaponAmmoType;
+    public WeaponsEnums.Ammotypes GetWeaponAmmoType => weaponAmmoType; 
     
     [SerializeField] private GameObject _muzzleVFXContainer;
     private IMuzzleVFX _muzzleVFX;
@@ -157,7 +161,6 @@ public abstract class AbstractWeapon : MonoBehaviour
         if (!_muzzleVFX.IsUnityNull())
         {
             _muzzleVFX.PlayVFX();
-            Debug.Log("Pew");
         }
     }
 

@@ -5,13 +5,22 @@ using UnityEngine;
 
 //Contains all ammo types in the game
 
-public static class AmmoTypes 
+public static class WeaponsEnums 
 {
     public enum Ammotypes
     {
         Pistol,
         SMG,
         Rockets,
-        Rifle
+        Rifle,
+        Shotgun
+    }
+    
+    public enum Weapons
+    {
+        Pistol,
+        Shotgun,
+        Sniper,
+        AssultRifle
     }
 }

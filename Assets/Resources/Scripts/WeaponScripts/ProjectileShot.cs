@@ -28,19 +28,12 @@ public class ProjectileShot : AbstractShootMechanic, IProjectileShootingMechanic
         IPoolable newBullet = projectilePoolContainer.GetPool.Get();
         newBullet.GetGameObject().transform.position = barrelEnd.position;
         newBullet.GetGameObject().transform.rotation = barrelEnd.rotation;
-        IProjectile bullet = newBullet.GetGameObject().GetComponent<IProjectile>();
-        bullet.SetParentShooter(this);
-        bullet.SetDamage(damage);
-        bullet.SetSpeed(projectileSpeed);
-        bullet.ResetItem();
-        bullet.SetOcclusionLayers(occlusionLayers);
-        if(!bullet.HaveHitEffectPool())
-            bullet.SetHitEffectsPool(_hitEffectsPool);
+        DoProjectileShot(barrelEnd, damage, newBullet.GetGameObject().GetComponent<IProjectile>(), projectileSpeed);
     }
     
     public override void DoCloseShot(Transform cameraRoot, float damage)
     {
-        base.DoShot(cameraRoot, damage);
+        base.DoRaycastShot(cameraRoot, damage);
     }
 
     public float GetDamageReducedByDistanceProjectile(float distance, float damage)

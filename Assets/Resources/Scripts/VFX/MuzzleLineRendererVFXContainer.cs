@@ -5,18 +5,29 @@ using UnityEngine;
 
 public class MuzzleLineRendererVFXContainer : MonoBehaviour, IMuzzleVFX
 {
-    [SerializeField] private float turnOffTimer;
     [SerializeField] private Transform barrelEnd;
-    private LineRenderer _vfx;
+    [SerializeField] private CustomLineVFX vfx;
+    private ObjectPoolContainer _linePool;
     private AbstractWeapon _parentWeapon;
     private Vector3 _hitPoint;
     private float _turnOffVFXTimer;
-    
+    private bool _wasSetUp = false;
 
-    private void Start()
+
+    private void OnEnable()
     {
-        _vfx = GetComponentInChildren<LineRenderer>();
+        if (!_wasSetUp)
+        {
+            InitialSetUp();
+            _wasSetUp = true;
+        }
+    }
+
+    private void InitialSetUp()
+    {
         _parentWeapon = GetComponentInParent<AbstractWeapon>();
+        _linePool = FindObjectOfType<AllObjectPoolsContainer>()
+            .CreateNewPool(vfx, _parentWeapon.GetDefaultPoolCapacity());
         if (_parentWeapon.TryGetComponent(out RaycastShot shotMechanic))
         {
             shotMechanic.HitTarget += SetHitPoint;
@@ -25,45 +36,19 @@ public class MuzzleLineRendererVFXContainer : MonoBehaviour, IMuzzleVFX
 
     public void PlayVFX()
     {
-        ResetTurnOffVFXTimer();
-        _vfx.SetPosition(0, barrelEnd.position);
-        _vfx.SetPosition(_vfx.positionCount - 1, _hitPoint);
-        _vfx.gameObject.SetActive(true);
-        _vfx.transform.parent = null;
-        ResetHitPoint();
+        IPoolable newLine = _linePool.GetPool.Get();
+        CustomLineVFX lineComponent = newLine.GetGameObject().GetComponent<CustomLineVFX>();
+        lineComponent.SetHitPoint(_hitPoint).SetInitialPoint(barrelEnd.transform.position);
     }
 
-    private void TurnOffVFX()
+    public Transform GetBarrelEnd()
     {
-        _vfx.transform.parent = transform;
-        _vfx.gameObject.SetActive(false);
+        return barrelEnd;
+    }
+    
+    private void SetHitPoint(Vector3 point)
+    {
+        _hitPoint = point;
     }
 
-    private void SetHitPoint(RaycastHit hit)
-    {
-        _hitPoint = hit.point;
-    }
-
-    private void ResetHitPoint()
-    {
-        _hitPoint = barrelEnd.position + barrelEnd.transform.forward * 500;
-    }
-
-    private void ResetTurnOffVFXTimer()
-    {
-        _turnOffVFXTimer = Time. time + turnOffTimer;
-    }
-
-    private bool timeIsUp()
-    {
-        if (_turnOffVFXTimer < Time.time)
-            return true;
-        return false;
-    }
-
-    private void Update()
-    {
-        if(timeIsUp())
-            TurnOffVFX();
-    }
 }

@@ -18,6 +18,11 @@ public class AllObjectPoolsContainer : MonoBehaviour
 
     public ObjectPoolContainer CreateNewPool(IPoolable reference, int defaultCapacity)
     {
+        if (reference == null)
+        {
+            Debug.LogErrorFormat("Can't create pool, reference is null");
+            return null;
+        }
         GameObject NewContainer = new GameObject();
         NewContainer.transform.SetParent(this.transform);
         ObjectPoolContainer NewPool = NewContainer.AddComponent<ObjectPoolContainer>();
@@ -25,5 +30,6 @@ public class AllObjectPoolsContainer : MonoBehaviour
         Pools.Add(NewPool);
         return NewPool;
     }
+    
     
 }

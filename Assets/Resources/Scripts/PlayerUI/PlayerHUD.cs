@@ -28,7 +28,7 @@ public class PlayerHUD : MonoBehaviour
     private void SetListeners()
     {
         playerInventory.WeaponWasChanged += UpdateAmountOfAmmo;
-        playerInventory.ActiveWeaponAmmoReduced += UpdateAmountOfAmmo;
+        playerInventory.ActiveWeaponAmmoChanged += UpdateAmountOfAmmo;
         playerInventory.MoneyAmountChanged += UpdateAmountOfMoney;
     }
 

@@ -11,7 +11,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
     protected AbstractWeapon thisWeapon;
     protected AnimationCurve damageDropOff;
 
-    public Action<RaycastHit> HitTarget;
+    public Action<Vector3> HitTarget;
     
     protected virtual void Start()
     {
@@ -20,25 +20,40 @@ public abstract class AbstractShootMechanic : MonoBehaviour
             .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
     }
     
-    public virtual void DoShot(Transform barrelEnd, float damage)
+    protected virtual void DoRaycastShot(Transform barrelEnd, float damage)
     {
         if (Physics.Raycast(barrelEnd.transform.position, barrelEnd.forward,
                 out RaycastHit hit, 500, occlusionLayers))
         {
             IPoolable bulletHole = _hitEffectsPool.GetPool.Get();
             bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
-            //HitTarget(hit);
+            HitTarget?.Invoke(hit.point);
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
                 target.TakeDamage(GetReducedDamageByDistance(hit.distance, damage));
             }
         }
+        else
+        {
+            HitTarget?.Invoke(barrelEnd.transform.position + barrelEnd.forward * 500);
+        }
     }
 
-    public virtual void DoCloseShot(Transform cameraRoot, float damage)
+    protected virtual void DoProjectileShot(Transform barrelEnd, float damage, IProjectile bullet, float projectileSpeed)
     {
-        DoShot(cameraRoot, damage);
+        bullet.SetParentShooter(this);
+        bullet.SetDamage(damage);
+        bullet.SetSpeed(projectileSpeed);
+        bullet.ResetItem();
+        bullet.SetOcclusionLayers(occlusionLayers);
+        if(!bullet.HaveHitEffectPool())
+            bullet.SetHitEffectsPool(_hitEffectsPool);
     }
+
+    public abstract void DoShot(Transform barrelEnd, float damage);
+
+    public abstract void DoCloseShot(Transform cameraRoot, float damage);
+    
     
     public float GetReducedDamageByDistance(float distance, float damage)
     {

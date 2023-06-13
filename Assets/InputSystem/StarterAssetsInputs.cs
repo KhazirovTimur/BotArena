@@ -16,6 +16,7 @@ namespace StarterAssets
 		public bool jump;
 		public bool triggerPushed;
 		public bool dash;
+		public bool interact;
 		
 
 		[Header("Movement Settings")]
@@ -53,6 +54,11 @@ namespace StarterAssets
 		public void OnDash(InputValue value)
 		{
 			DashInput(value.isPressed);
+		}
+		
+		public void OnInteract(InputValue value)
+		{
+			InteractInput(value.isPressed);
 		}
 
 		public void OnChooseWeapon1()
@@ -111,6 +117,11 @@ namespace StarterAssets
 		private void DashInput(bool dashIsPressed)
 		{
 			dash = dashIsPressed;
+		}
+		
+		private void InteractInput(bool interactisPressed)
+		{
+			interact = interactisPressed;
 		}
 
 		public Action<int> ChooseWeapon;

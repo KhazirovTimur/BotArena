@@ -303,7 +303,7 @@ GameObject:
   m_Icon: {fileID: 5132851093641282708, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &528062964
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -349,6 +349,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxAttackers: 4
+  minAttackRate: 1
 --- !u!1 &542508511
 GameObject:
   m_ObjectHideFlags: 0
@@ -2501,5 +2502,11 @@ PrefabInstance:
       propertyPath: m_Camera
       value: 
       objectReference: {fileID: 1769645744913322485}
+    - target: {fileID: 6889588863547961844, guid: ca7aaf8ac733a654fa26e96e1ea1c8ef,
+        type: 3}
+      propertyPath: WeaponsPrefabs.Array.data[1]
+      value: 
+      objectReference: {fileID: 3967772578534542162, guid: 355aa0305c3e792459fd2ef05dbd1b27,
+        type: 3}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: ca7aaf8ac733a654fa26e96e1ea1c8ef, type: 3}

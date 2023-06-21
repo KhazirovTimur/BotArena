@@ -188,6 +188,7 @@ GameObject:
   - component: {fileID: 1488014841373827662}
   - component: {fileID: 2884593707129929278}
   - component: {fileID: 1488014841373827657}
+  - component: {fileID: 334904816}
   m_Layer: 8
   m_Name: PlayerCapsule
   m_TagString: Player
@@ -441,6 +442,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db277e265ab43584fac6b5f9469c8925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &334904816
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2884593707129929266}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9efb0267cb6d42d4bbe69583ba0a80d0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _playerInventory: {fileID: 6889588863547961844}
 --- !u!1 &6889588863547961846
 GameObject:
   m_ObjectHideFlags: 0
@@ -488,15 +502,21 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f9c93d2a6563b8b45a7ee7b881ccfb88, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _playerAmmoTypesWithMaxAmmount:
+  - type: 0
+    maxAmmo: 200
+  - type: 4
+    maxAmmo: 200
+  - type: 3
+    maxAmmo: 200
+  - type: 1
+    maxAmmo: 200
   WeaponsPrefabs:
   - {fileID: 5887835040445336801, guid: 17647bd8df7a1594ca0126c93f9a80e4, type: 3}
   - {fileID: 6462691489836562962, guid: 4d5f8c71885cd4a439a1409cdb1260c4, type: 3}
   - {fileID: 6763187259365077720, guid: aa1c14335a0f8684d88e0f2977ef8d5b, type: 3}
   - {fileID: 3875823344045355233, guid: e2c6e18ff14bd5641ab9f82e8d78e548, type: 3}
-  Weapons: []
-  WeaponsAmmo: 
   WeaponRoot: {fileID: 1532403028352766281}
-  ActiveWeaponIndex: 0
 --- !u!135 &6889588863547961843
 SphereCollider:
   m_ObjectHideFlags: 0

@@ -26,43 +26,37 @@ public abstract class AbstractWeapon : MonoBehaviour
     
     [Space(10)]
     [Header("Weapon stats")]
-    [SerializeField]
-    protected float Damage;
+    [SerializeField] protected float Damage;
     [Tooltip("Fire rate, bullets pet minute")]
-    [SerializeField]
-    protected float rateOfFire;
+    [SerializeField] protected float rateOfFire;
     [Tooltip("Angle, to which bullets can deviate from central raycast")]
-    [SerializeField]
-    protected float SpreadAngle;
+    [SerializeField] protected float SpreadAngle;
     [Tooltip("If true, weapon will shoot while hold fire button")]
-    [SerializeField]
-    protected bool IsFullAuto;
-
-    [Tooltip("Attach projectile or raycast shooting mechanic")] 
-    [SerializeField]
-    protected AbstractShootMechanic AbstractShootMechanic;
+    [SerializeField] protected bool IsFullAuto;
+    [SerializeField] protected int ammoSpendPerShot = 1;
+    [Tooltip("1 sec = 100m.")]
+    [SerializeField] protected AnimationCurve damageDropOff;
+    public AnimationCurve GetDamageDropOffCurve => damageDropOff;
+    [SerializeField] protected WeaponsEnums.Ammotypes weaponAmmoType;
+    public WeaponsEnums.Ammotypes GetWeaponAmmoType => weaponAmmoType; 
     
     
     [Space(10)]
     [Header("Other settings")]
     [Tooltip("Transform of empty gameobject at the end of barrel. Bullets spawn on this transform")]
     [SerializeField] protected Transform barrelEnd;
-
-    //Transform of empty gameobject for camera root. Used for shots at very close ranges
-    protected Transform _playerCameraRootTransform;
     [SerializeField] protected float minStandartShotDistance;
-
-    [Tooltip("1 sec = 100m.")]
-    [SerializeField] protected AnimationCurve damageDropOff;
-    public AnimationCurve GetDamageDropOffCurve => damageDropOff;
-    
-    
-    [SerializeField] protected WeaponsEnums.Ammotypes weaponAmmoType;
-    public WeaponsEnums.Ammotypes GetWeaponAmmoType => weaponAmmoType; 
-    
     [SerializeField] private GameObject _muzzleVFXContainer;
-    private IMuzzleVFX _muzzleVFX;
+    
+    [Space(10)]
+    [Header("Sounds")]
+    [SerializeField] protected AudioClip[] shotSounds;
 
+    
+    
+    
+    protected AbstractShootMechanic ShootMechanic;
+    
     //Action for recoil
     public Action ShotWasMade;
 
@@ -78,23 +72,21 @@ public abstract class AbstractWeapon : MonoBehaviour
     
     //Where player is aiming
     protected Vector3 _aim;
-
-    [SerializeField] protected AudioClip[] shotSounds;
-
+    
+    //Transform of empty gameobject for camera root. Used for shots at very close ranges
+    protected Transform _playerCameraRootTransform;
+    
+    //FX
+    private IMuzzleVFX _muzzleVFX;
     protected AudioSource audioSource;
     
+
     
-    protected void Start()
-    {
-        
-    }
-
-
     public void InitializeWeapon()
     {
         _triggerIsPushed = false;
         _triggerWasReleased = true;
-        AbstractShootMechanic = GetComponent<AbstractShootMechanic>();
+        ShootMechanic = GetComponent<AbstractShootMechanic>();
         _playerInventory = FindObjectOfType<PlayerInventory>();
         _playerCameraRootTransform = FindObjectOfType<CameraRootForShots>().transform;
         audioSource = GetComponent<AudioSource>();
@@ -123,7 +115,7 @@ public abstract class AbstractWeapon : MonoBehaviour
             return false;
         if (!(IsFullAuto || _triggerWasReleased))
             return false;
-        if (_playerInventory.GetAmmo((int)weaponAmmoType) <= 0)
+        if (_playerInventory.GetAmmo(weaponAmmoType) <= 0)
             return false;
         if (!_playerInventory.IfCanShoot)
             return false;
@@ -134,19 +126,19 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected virtual void Shoot()
     {
         _triggerWasReleased = false;
-        _playerInventory.ReduceAmmoByShot();
+        _playerInventory.ReduceActiveWeaponAmmoByShot(ammoSpendPerShot);
         if (EnemyIsTooClose())
         {
             _playerCameraRootTransform.LookAt(_aim);
             RanomizeSpreadAngle(_playerCameraRootTransform);
-            AbstractShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            ShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
             _playerCameraRootTransform.LookAt(_aim);
         }
         else
         {
             barrelEnd.LookAt(_aim);
             RanomizeSpreadAngle(barrelEnd);
-            AbstractShootMechanic.DoShot(barrelEnd, Damage);  
+            ShootMechanic.DoShot(barrelEnd, Damage);  
             barrelEnd.LookAt(_aim);
         }
         _delay = Time.time + (60.0f/rateOfFire);

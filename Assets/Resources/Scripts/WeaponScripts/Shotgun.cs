@@ -10,14 +10,14 @@ public class Shotgun : AbstractWeapon
    protected override void Shoot()
    {
       _triggerWasReleased = false;
-      _playerInventory.ReduceAmmoByShot();
+      _playerInventory.ReduceActiveWeaponAmmoByShot(ammoSpendPerShot);
       if (EnemyIsTooClose())
       {
          for (int i = 0; i < ProjectilesPerShot; i++)
          {
             _playerCameraRootTransform.LookAt(_aim);
             RanomizeSpreadAngle(_playerCameraRootTransform);
-            AbstractShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
+            ShootMechanic.DoCloseShot(_playerCameraRootTransform, Damage);
             _playerCameraRootTransform.LookAt(_aim);
          }
       }
@@ -27,7 +27,7 @@ public class Shotgun : AbstractWeapon
          {
             barrelEnd.LookAt(_aim);
             RanomizeSpreadAngle(barrelEnd);
-            AbstractShootMechanic.DoShot(barrelEnd, Damage);  
+            ShootMechanic.DoShot(barrelEnd, Damage);  
             barrelEnd.LookAt(_aim);
          }
       }

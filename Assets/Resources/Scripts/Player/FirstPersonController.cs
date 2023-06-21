@@ -71,6 +71,9 @@ namespace StarterAssets
 		[Header("Interactions")] 
 		public LayerMask interactionRaycastLayers;
 		public float interactDistance;
+		
+		//Actions
+		public Action<IInteractable> LookAtInteractable;
 
 		// cinemachine
 		private float _cinemachineTargetPitch;
@@ -93,6 +96,7 @@ namespace StarterAssets
 		
 		//Link to player inventory
 		private PlayerInventory _playerInventory;
+		private PlayerInterface _playerInterface;
 
 		private RaycastHit hit;
 
@@ -141,6 +145,7 @@ namespace StarterAssets
 			_jumpTimeoutDelta = JumpTimeout;
 			_fallTimeoutDelta = FallTimeout;
 			_playerInventory = GetComponentInChildren<PlayerInventory>();
+			_playerInterface = GetComponent<PlayerInterface>();
 			_input.ChooseWeapon += SetActiveWeapon;
 		}
 
@@ -361,14 +366,16 @@ namespace StarterAssets
 		{
 			if(Physics.Raycast(_mainCamera.transform.position, _mainCamera.transform.forward, out RaycastHit hit, interactDistance,interactionRaycastLayers))
 			{
-				if (!_input.interact)
-					return;
 				if (hit.transform.TryGetComponent(out IInteractable interactItem))
 				{
-					interactItem.OnInteraction(_playerInventory);
+					LookAtInteractable?.Invoke(interactItem);
+					if (!_input.interact)
+						return;
+					interactItem.OnInteraction(_playerInterface);
 					_input.interact = false;
 				}
 			}
+			_input.interact = false;
 		}
 
 		private void SetActiveWeapon(int weaponIndex)

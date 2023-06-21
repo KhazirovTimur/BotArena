@@ -27,31 +27,16 @@ public class AttackPlayer : MonoBehaviour
 
     
     
-    
-
-    // Start is called before the first frame update
-    void Start()
+    private void Start()
     {
         playerTransform = FindObjectOfType<FirstPersonController>().transform;
         shotTimer = delayBetweenShots;
-        //if(!objectPoolContainer)
-           // objectPoolContainer = FindObjectOfType<AllObjectPoolsContainer>()
-             //   .CreateNewPool(projectile.GetComponent<IPoolable>(), 50);
         timerUpdateLastPlayerPos = delayUpdateLastPlayerPos;
     }
 
     
     private void Update()
     {
-        if (shotTimer <= Time.time)
-        {
-            if (CanShoot())
-            {
-                Shoot();
-            }
-            UpdateShotTimer();
-        }
-
         if (timerUpdateLastPlayerPos <= Time.time)
         {
             UpdatePlayerPosition();
@@ -61,8 +46,10 @@ public class AttackPlayer : MonoBehaviour
 
 
 
-    private bool CanShoot()
+    public bool CanShoot()
     {
+        if (shotTimer >= Time.time)
+            return false;
         if (Physics.Linecast(transform.position + Vector3.up, playerTransform.position + Vector3.up, occulingLayers))
         {
             return false;
@@ -72,14 +59,14 @@ public class AttackPlayer : MonoBehaviour
     }
     
 
-    private void Shoot()
+    public void Shoot()
     {
         IPoolable project = objectPoolContainer.GetPool.Get();
         project.GetGameObject().transform.position = transform.position + transform.up;
         project.GetGameObject().transform.LookAt(PredictPlayerPosition());
         IProjectile bullet = project.GetGameObject().GetComponent<IProjectile>();
         bullet.SetSpeed(projectileSpeed);
-        
+        UpdateShotTimer();
     }
 
 

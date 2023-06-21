@@ -29,10 +29,10 @@ public class SimpleEnemy : MonoBehaviour, IDamagable
     private void CheckHP()
     {
         if (hp <= 0)
-            KillThisEnemy();        
+            GetComponent<EnemyInterface>().GetToDeathStateMachine.ChangeToDeathState();      
     }
 
-    private void KillThisEnemy()
+    public void KillThisEnemy()
     {
         Debug.Log("I'm dead(");
         ThrowMoney();

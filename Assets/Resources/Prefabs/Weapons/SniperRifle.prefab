@@ -314,9 +314,7 @@ MonoBehaviour:
   rateOfFire: 50
   SpreadAngle: 0
   IsFullAuto: 0
-  AbstractShootMechanic: {fileID: 317874510685173707}
-  barrelEnd: {fileID: 491162345049735323}
-  minStandartShotDistance: 2
+  ammoSpendPerShot: 1
   damageDropOff:
     serializedVersion: 2
     m_Curve:
@@ -342,6 +340,8 @@ MonoBehaviour:
     m_PostInfinity: 2
     m_RotationOrder: 4
   weaponAmmoType: 3
+  barrelEnd: {fileID: 491162345049735323}
+  minStandartShotDistance: 2
   _muzzleVFXContainer: {fileID: 8953099509770389166}
   shotSounds:
   - {fileID: 8300000, guid: 08f78eba48bb21c44ac5a74ca84efc83, type: 3}

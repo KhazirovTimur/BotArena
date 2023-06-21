@@ -4,56 +4,64 @@ using System.Collections.Generic;
 using UnityEngine;
 
 
-//Contains players weapons and ammo
+//Contains players weapons, ammo and money
 
 public class PlayerInventory : MonoBehaviour, ICollector
 {
+    
+    
+    [Serializable]
+    struct PlayerAmmo
+    {
+         public WeaponsEnums.Ammotypes type;
+         public int maxAmmo;
+    }
+    
+    [SerializeField] private List<PlayerAmmo> _playerAmmoTypesWithMaxAmmount;
 
-    [Tooltip("Fill here weapons prefabs")] public List<GameObject> WeaponsPrefabs;
-
-    //Cache for weapons scripts components
-    [HideInInspector] public List<AbstractWeapon> Weapons = new List<AbstractWeapon>();
-
-    private Dictionary<AbstractWeapon, bool> _weaponIsUnlocked = new Dictionary<AbstractWeapon, bool>();
-
-    //List of ammo for all weapons
-    public List<int> WeaponsAmmo = new List<int>();
+    private Dictionary<WeaponsEnums.Ammotypes, int> _maxAmmo = new Dictionary<WeaponsEnums.Ammotypes, int>();
+    private Dictionary<WeaponsEnums.Ammotypes, int> _currentAmmo = new Dictionary<WeaponsEnums.Ammotypes, int>();
+    
+    
+    [Tooltip("Fill here weapons prefabs")] 
+    [SerializeField] private List<GameObject> WeaponsPrefabs;
 
     //Player hands. Weapon spawns here
-    public WeaponSwitcher WeaponRoot;
+    [SerializeField] private WeaponSwitcher WeaponRoot;
+    
+    
+    //Cache for weapons scripts components
+    private List<AbstractWeapon> Weapons = new List<AbstractWeapon>();
 
+    private Dictionary<AbstractWeapon, bool> _weaponIsUnlocked = new Dictionary<AbstractWeapon, bool>();
+    
     //Which weapon is active now
-    public int ActiveWeaponIndex;
-
+    private int ActiveWeaponIndex;
     private int ActiveWeaponToSet;
-
+    
     private bool canShoot;
     public bool IfCanShoot => canShoot;
-
+    
     public Action ActiveWeaponAmmoChanged;
     public Action WeaponWasChanged;
+    public Action MoneyAmountChanged;
 
     private int money;
 
-    public Action MoneyAmountChanged;
-
-
-
-
-    //Instantiate weapons
-    void Start()
+    
+    private void Start()
     {
         if (CheckPrefabsAssigned())
         {
             InstantiateWeapons();
-            AddAmmoToAllWeapons();
         }
-
+        ConvertAmmoStructToDictionary();
         ActiveWeaponIndex = 0;
         canShoot = true;
         LeaveOneActiveWeapon(ActiveWeaponIndex);
         UnlockWeapon(Weapons[ActiveWeaponIndex].GetWeapon);
         AddValue(1000);
+        AddAmmoToAllWeapons();
         WeaponRoot.WeaponWasLowered += ChangeWeaponPrefab;
         WeaponRoot.WeaponIsReady += FinishWeaponChange;
         WeaponWasChanged?.Invoke();
@@ -66,6 +74,16 @@ public class PlayerInventory : MonoBehaviour, ICollector
         Debug.LogError("No weapons prefabs attached to inventory");
         return false;
     }
+
+    private void ConvertAmmoStructToDictionary()
+    {
+        for(int i = 0; i < _playerAmmoTypesWithMaxAmmount.Count; i ++)
+        {
+            _maxAmmo.Add(_playerAmmoTypesWithMaxAmmount[i].type, _playerAmmoTypesWithMaxAmmount[i].maxAmmo);
+            _currentAmmo.Add(_playerAmmoTypesWithMaxAmmount[i].type, 0);
+        }
+    }
+    
 
 
     private void InstantiateWeapons()
@@ -91,52 +109,59 @@ public class PlayerInventory : MonoBehaviour, ICollector
     }
 
 
-
+    //Debug func
     private void AddAmmoToAllWeapons()
     {
-        for (int i = 0;
-             i < System.Enum.GetValues(typeof(WeaponsEnums.Ammotypes)).Length;
-             i++)
+        var keys = new List<WeaponsEnums.Ammotypes>(_currentAmmo.Keys);
+        foreach (var key in keys)
         {
-            WeaponsAmmo.Add(150);
+            _currentAmmo[key] += 150;
         }
     }
 
 
     //Function for weapons to let them reduce ammo
-    public void ReduceAmmoByShot()
+    public void ReduceActiveWeaponAmmoByShot(int amount)
     {
-        int ammoIndex = (int) (Weapons[ActiveWeaponIndex].GetWeaponAmmoType);
-        WeaponsAmmo[ammoIndex] -= 1;
-        ActiveWeaponAmmoChanged();
+        _currentAmmo[Weapons[ActiveWeaponIndex].GetWeaponAmmoType] -= amount;
+        ActiveWeaponAmmoChanged?.Invoke();
     }
 
 
     //Weapons check if ammo left
-    public int GetAmmo(int ammoIndex)
+    public int GetAmmo(WeaponsEnums.Ammotypes ammoType)
     {
-        return WeaponsAmmo[ammoIndex];
+        return _currentAmmo[ammoType];
     }
     
-    public bool AddAmmo(WeaponsEnums.Ammotypes type, int ammount)
+    public bool AddAmmo(WeaponsEnums.Ammotypes type, int amount)
     {
-        WeaponsAmmo[(int) type] += ammount;
-        ActiveWeaponAmmoChanged();
-        return true;
+        if (_currentAmmo[type] < _maxAmmo[type])
+        {
+            _currentAmmo[type] += amount;
+            ClampAmountOfAmmo(type);
+            ActiveWeaponAmmoChanged();
+            return true;
+        }
+        return false;
+    }
+
+    private void ClampAmountOfAmmo(WeaponsEnums.Ammotypes type)
+    {
+        if (_currentAmmo[type] > _maxAmmo[type])
+            _currentAmmo[type] = _maxAmmo[type];
     }
 
     public int GetActiveWeaponAmmo()
     {
-        int ammoIndex = (int) (Weapons[ActiveWeaponIndex].GetWeaponAmmoType);
-        return WeaponsAmmo[ammoIndex];
+        return _currentAmmo[Weapons[ActiveWeaponIndex].GetWeaponAmmoType];
     }
-
 
     private void LeaveOneActiveWeapon(int weaponIndex)
     {
-        foreach (var VARIABLE in Weapons)
+        foreach (var weapon in Weapons)
         {
-            VARIABLE.GetGameObject().SetActive(false);
+            weapon.GetGameObject().SetActive(false);
         }
 
         Weapons[weaponIndex].GetGameObject().SetActive(true);
@@ -178,7 +203,7 @@ public void ChangeWeaponPrefab()
     public void AddValue(int value)
     {
         money += value;
-        MoneyAmountChanged();
+        MoneyAmountChanged?.Invoke();
     }
 
     public int GetMoney()

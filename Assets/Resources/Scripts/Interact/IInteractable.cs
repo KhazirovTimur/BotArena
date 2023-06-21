@@ -4,5 +4,7 @@ using UnityEngine;
 
 public interface IInteractable
 {
-    public void OnInteraction(PlayerInventory client);
+    public void OnInteraction(PlayerInterface client);
+
+    public string GetInteractionLabel();
 }

@@ -15,12 +15,18 @@ public class BuyWeaponObject : MonoBehaviour, IInteractable
         
     }
 
-    public void OnInteraction(PlayerInventory Client)
+    public void OnInteraction(PlayerInterface Client)
     {
-        if(Client.GetMoney() < cost)
+        if(Client.GetPlayerInventory.GetMoney() < cost)
             return;
-        if(Client.UnlockWeapon(weaponForSale))
-            Client.AddValue(-cost);
+        if(Client.GetPlayerInventory.UnlockWeapon(weaponForSale))
+            Client.GetPlayerInventory.AddValue(-cost);
+    }
+
+    public string GetInteractionLabel()
+    {
+        string text = "Buy " + weaponForSale + " for " + cost + " cells";
+        return text;
     }
 
     // Update is called once per frame

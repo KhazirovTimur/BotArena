@@ -7,10 +7,13 @@ public abstract class AbstractShootMechanic : MonoBehaviour
 {
     [SerializeField] protected LayerMask occlusionLayers;
     [SerializeField] protected GameObject hitEffect;
+    [SerializeField] protected float maxRaycastDistance = 500;
     protected ObjectPoolContainer _hitEffectsPool;
     protected AbstractWeapon thisWeapon;
     protected AnimationCurve damageDropOff;
 
+    
+    //Used for bullet holes
     public Action<Vector3> HitTarget;
     
     protected virtual void Start()
@@ -23,7 +26,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
     protected virtual void DoRaycastShot(Transform barrelEnd, float damage)
     {
         if (Physics.Raycast(barrelEnd.transform.position, barrelEnd.forward,
-                out RaycastHit hit, 500, occlusionLayers))
+                out RaycastHit hit, maxRaycastDistance, occlusionLayers))
         {
             IPoolable bulletHole = _hitEffectsPool.GetPool.Get();
             bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
@@ -35,7 +38,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
         }
         else
         {
-            HitTarget?.Invoke(barrelEnd.transform.position + barrelEnd.forward * 500);
+            HitTarget?.Invoke(barrelEnd.transform.position + barrelEnd.forward * maxRaycastDistance);
         }
     }
 

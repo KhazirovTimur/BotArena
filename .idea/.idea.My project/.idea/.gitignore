@@ -11,3 +11,9 @@
 # Datasource local storage ignored files
 /dataSources/
 /dataSources.local.xml
+#Big files
+/Assets/Source/Textures/_impoted/Weapons/WPNT_Optical_Sight_1_AlbedoTransparency.tga
+/Assets/Source/Textures/_impoted/Weapons/WPNT_Optical_Sight_1_MetallicSmoothness.tga
+/Assets/Source/Textures/_impoted/Weapons/WPNT_SynTax_P40_Camo_MetallicSmoothness.tga
+/Assets/Source/Textures/_impoted/Weapons/WPNT_SynTax_P40_MetallicSmoothness.tga
+/Assets/ImportedAssets/_DLNK

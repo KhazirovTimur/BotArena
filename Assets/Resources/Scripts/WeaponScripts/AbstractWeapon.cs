@@ -46,7 +46,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Tooltip("Transform of empty gameobject at the end of barrel. Bullets spawn on this transform")]
     [SerializeField] protected Transform barrelEnd;
     [SerializeField] protected float minStandartShotDistance;
-    [SerializeField] private GameObject _muzzleVFXContainer;
+    [SerializeField] private List<GameObject> _muzzleVFXContainer = new List<GameObject>();
     
     [Space(10)]
     [Header("Sounds")]
@@ -77,7 +77,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected Transform _playerCameraRootTransform;
     
     //FX
-    private IMuzzleVFX _muzzleVFX;
+    private List<IMuzzleVFX> _muzzleVFX = new List<IMuzzleVFX>();
     protected AudioSource audioSource;
     
 
@@ -90,8 +90,11 @@ public abstract class AbstractWeapon : MonoBehaviour
         _playerInventory = FindObjectOfType<PlayerInventory>();
         _playerCameraRootTransform = FindObjectOfType<CameraRootForShots>().transform;
         audioSource = GetComponent<AudioSource>();
-        if(_muzzleVFXContainer)
-            _muzzleVFX = _muzzleVFXContainer.GetComponent<IMuzzleVFX>();
+        if(!_muzzleVFXContainer.IsUnityNull())
+            foreach (var element in _muzzleVFXContainer)
+            {
+                _muzzleVFX.Add(element.GetComponent<IMuzzleVFX>());
+            }
     }
 
 
@@ -152,7 +155,10 @@ public abstract class AbstractWeapon : MonoBehaviour
         audioSource.PlayOneShot(shotSounds[Random.Range(0, shotSounds.Length)]);
         if (!_muzzleVFX.IsUnityNull())
         {
-            _muzzleVFX.PlayVFX();
+            foreach (var effect in _muzzleVFX)
+            {
+                effect.PlayVFX();
+            }
         }
     }
 

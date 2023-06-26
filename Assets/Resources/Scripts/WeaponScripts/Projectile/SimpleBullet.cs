@@ -136,7 +136,7 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
         _hitEffectPoolContainer = effectsPool;
     }
 
-    public bool HaveHitEffectPool()
+    public bool CheckHitEffectPool()
     {
         return _hitEffectPoolContainer;
     }

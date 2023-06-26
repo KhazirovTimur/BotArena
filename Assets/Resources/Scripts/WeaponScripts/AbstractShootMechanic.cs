@@ -41,6 +41,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
             HitTarget?.Invoke(barrelEnd.transform.position + barrelEnd.forward * maxRaycastDistance);
         }
     }
+    
 
     protected virtual void DoProjectileShot(Transform barrelEnd, float damage, IProjectile bullet, float projectileSpeed)
     {
@@ -49,7 +50,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
         bullet.SetSpeed(projectileSpeed);
         bullet.ResetItem();
         bullet.SetOcclusionLayers(occlusionLayers);
-        if(!bullet.HaveHitEffectPool())
+        if(!bullet.CheckHitEffectPool())
             bullet.SetHitEffectsPool(_hitEffectsPool);
     }
 

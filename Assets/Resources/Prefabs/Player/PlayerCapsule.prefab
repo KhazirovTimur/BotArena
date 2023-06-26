@@ -513,7 +513,7 @@ MonoBehaviour:
     maxAmmo: 200
   WeaponsPrefabs:
   - {fileID: 5887835040445336801, guid: 17647bd8df7a1594ca0126c93f9a80e4, type: 3}
-  - {fileID: 6462691489836562962, guid: 4d5f8c71885cd4a439a1409cdb1260c4, type: 3}
+  - {fileID: 3967772578534542162, guid: 355aa0305c3e792459fd2ef05dbd1b27, type: 3}
   - {fileID: 2825767651777516677, guid: d630830208453214295acf5468d08218, type: 3}
   - {fileID: 1847602953184306399, guid: 20d9cf905f267ea4393760aed7ec1c65, type: 3}
   WeaponRoot: {fileID: 1532403028352766281}

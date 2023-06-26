@@ -28,7 +28,9 @@ public class PlayerInventory : MonoBehaviour, ICollector
 
     //Player hands. Weapon spawns here
     [SerializeField] private WeaponSwitcher WeaponRoot;
-    
+
+    [SerializeField] private ShoulderGrenadeLauncher shoulderGrenadeLauncher;
+     
     
     //Cache for weapons scripts components
     private List<AbstractWeapon> Weapons = new List<AbstractWeapon>();
@@ -229,6 +231,11 @@ public void ChangeWeaponPrefab()
         }
 
         return false;
+    }
+
+    public void ShootGrenade()
+    {
+        shoulderGrenadeLauncher.DoShot();
     }
 
 

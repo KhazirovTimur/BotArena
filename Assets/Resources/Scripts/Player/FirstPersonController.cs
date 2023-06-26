@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using Cinemachine;
 using UnityEditor.Experimental.GraphView;
 using UnityEditor.ShaderGraph.Internal;
@@ -89,6 +90,7 @@ namespace StarterAssets
 		private float _dashTimeoutDelta;
 		private float _dashTimeDelta;
 		
+		
 
 		// timeout deltatime
 		private float _jumpTimeoutDelta;
@@ -160,6 +162,7 @@ namespace StarterAssets
 			TriggerPushed();
 			WeaponShakeAnimation();
 			Interaction();
+			ShootGrenade();
 		}
 
 		private void LateUpdate()
@@ -293,6 +296,17 @@ namespace StarterAssets
 			}
 		}
 
+
+		public void LaunchInAir(Vector3 dirrection, float startSpeed)
+		{
+			dirrection = dirrection.normalized;
+			Vector3 projectOnGround = Vector3.ProjectOnPlane(dirrection, Vector3.up);
+			_speed = projectOnGround.magnitude * startSpeed;
+			_verticalVelocity = (dirrection - projectOnGround).magnitude * startSpeed;
+		}
+		
+
+
 		private void WeaponShakeAnimation()
 		{
 			if (!Grounded || InDash)
@@ -376,6 +390,15 @@ namespace StarterAssets
 				}
 			}
 			_input.interact = false;
+		}
+
+		private void ShootGrenade()
+		{
+			if (_input.shootGrenade)
+			{
+				_input.shootGrenade = false;
+				_playerInventory.ShootGrenade();
+			}
 		}
 
 		private void SetActiveWeapon(int weaponIndex)

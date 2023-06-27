@@ -12,7 +12,5 @@ public interface IProjectile
     public void SetSpeed(float speed);
     public void ResetItem();
     public void SetOcclusionLayers(LayerMask mask);
-    public void SetHitEffectsPool(ObjectPoolContainer effectsPool);
-    public bool CheckHitEffectPool();
     public void SetParentShooter(AbstractShootMechanic parent);
 }

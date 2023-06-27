@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class HitDecals : MonoBehaviour, IPoolable, IHardReleasedToPool
+public class HitDecals : MonoBehaviour, IPoolable, IHardReleasedToPool, IHitEffect
 {
     [SerializeField] public float dissapearTimer = 5f;
     

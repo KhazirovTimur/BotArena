@@ -13,15 +13,11 @@ public class Teleport : MonoBehaviour, IInteractable
     public Transform GetSpawnTransform => spawnTransform;
     private static bool isEnabled = true;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+
     
     public void OnInteraction(PlayerInterface client)
     {
-        if (isEnabled && client.GetPlayerInventory.GetMoney() > teleportCost)
+        if (isEnabled && client.GetPlayerInventory.GetMoney() >= teleportCost)
         {
             client.GetPlayerTransform.transform.position = teleportTo.GetSpawnTransform.position;
             client.GetPlayerTransform.rotation = teleportTo.GetSpawnTransform.rotation;
@@ -47,9 +43,5 @@ public class Teleport : MonoBehaviour, IInteractable
     }
 
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+
 }

@@ -144,7 +144,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3265141808506789969}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0.035955068, y: 1.5108048, z: 6.72}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.1, y: 0.1, z: 0.1}
   m_ConstrainProportionsScale: 1
   m_Children:
@@ -211,7 +211,7 @@ SphereCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 3265141808506789969}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
   m_Radius: 0.5
@@ -227,11 +227,11 @@ Rigidbody:
   m_Mass: 1
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
-  m_IsKinematic: 0
+  m_UseGravity: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
-  m_CollisionDetection: 0
+  m_CollisionDetection: 3
 --- !u!114 &-1319451793873179296
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -244,11 +244,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fc2e7c85d47795849b3f689262f16fd4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  occlusionLayers:
-    serializedVersion: 2
-    m_Bits: 577
-  hitEffect: {fileID: 3310767498211781859, guid: 84b49a5c3da33f84097ffafec4bb0c52,
-    type: 3}
 --- !u!1001 &7571194156474494148
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -267,6 +262,10 @@ PrefabInstance:
     - target: {fileID: 100002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
       propertyPath: m_Layer
       value: 12
+      objectReference: {fileID: 0}
+    - target: {fileID: 100002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
       propertyPath: m_RootOrder
@@ -373,12 +372,48 @@ PrefabInstance:
       value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: moveWithTransform
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime0
+      value: 6553
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime1
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.atime2
+      value: 65535
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key0.a
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key1.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.key2.a
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
       propertyPath: InitialModule.startRotationX.minMaxState
       value: 3
       objectReference: {fileID: 0}
     - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
       propertyPath: InitialModule.startRotationY.minMaxState
       value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 19800002, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
+      propertyPath: ColorModule.gradient.maxGradient.m_NumAlphaKeys
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 19900000, guid: 6f8449a4663a4fd44b6140772d4f39f9, type: 3}
       propertyPath: m_Materials.Array.size

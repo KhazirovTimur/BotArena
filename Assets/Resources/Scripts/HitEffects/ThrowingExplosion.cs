@@ -2,22 +2,25 @@ using System;
 using StarterAssets;
 using UnityEngine;
 
-public class ThrowingExplosion : MonoBehaviour
+public class ThrowingExplosion : MonoBehaviour, IHitEffect
 {
     [SerializeField] private float maxStartSpeed;
-    [SerializeField] private float lifeTime = 2.0f;
-    
+    [SerializeField] private float vfxLifeTime = 2.0f;
+    [SerializeField] private float throwEffectLifeTime = 0.5f;
+
     private float _maxRadius;
 
     private ParticleSystem _vfx;
 
-    private float _lifeTimer;
+    private float _vfxLifeTimer;
+    private float _throwEffectTimer;
 
 
 
     private void Start()
     {
-        _lifeTimer = Time.time + lifeTime;
+        _vfxLifeTimer = Time.time + vfxLifeTime;
+        _throwEffectTimer = Time.time + throwEffectLifeTime;
         _maxRadius = GetComponent<CapsuleCollider>().radius;
         _vfx = GetComponentInChildren<ParticleSystem>();
         _vfx.Play();
@@ -25,13 +28,14 @@ public class ThrowingExplosion : MonoBehaviour
 
     private void Update()
     {
-        if(_lifeTimer < Time.time)
+        if(_vfxLifeTimer < Time.time)
             Destroy(gameObject);
     }
 
     private void OnTriggerStay(Collider other)
     {
-        Debug.Log(other.gameObject.tag);
+        if(_throwEffectTimer < Time.time)
+            return;
         if (other.gameObject.CompareTag("Player"))
         {
             FirstPersonController player = other.transform.GetComponentInParent<FirstPersonController>();
@@ -39,12 +43,15 @@ public class ThrowingExplosion : MonoBehaviour
             float speed = (dirrection.magnitude / _maxRadius) * maxStartSpeed;
             dirrection = dirrection.normalized;
             player.LaunchInAir(dirrection, speed);
-            Debug.Log("push");
         }
     }
     
-    
-    
+    public void SetPosAndRotation(RaycastHit hit)
+    {
+        transform.position = hit.point;
+        transform.LookAt(transform.position + (-hit.normal));
+        transform.SetParent(hit.transform);
+    }
     
     
 }

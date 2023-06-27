@@ -6,30 +6,44 @@ using UnityEngine;
 public abstract class AbstractShootMechanic : MonoBehaviour
 {
     [SerializeField] protected LayerMask occlusionLayers;
+    public LayerMask GetOcclusionLayers => occlusionLayers;
     [SerializeField] protected GameObject hitEffect;
+    [SerializeField] protected bool usePoolForHitEffects = true;
     [SerializeField] protected float maxRaycastDistance = 500;
     protected ObjectPoolContainer _hitEffectsPool;
     protected AbstractWeapon thisWeapon;
     protected AnimationCurve damageDropOff;
 
     
-    //Used for bullet holes
+    //Used for muzzle line render
     public Action<Vector3> HitTarget;
     
+
     protected virtual void Start()
     {
-        thisWeapon = GetComponent<AbstractWeapon>();
-        _hitEffectsPool = FindObjectOfType<AllObjectPoolsContainer>()
-            .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
+        Initialize();
     }
-    
+
+    protected virtual void Initialize()
+    {
+        if(TryGetComponent(out AbstractWeapon weapon))
+            thisWeapon = weapon;
+        if(usePoolForHitEffects)
+        {
+            _hitEffectsPool = FindObjectOfType<AllObjectPoolsContainer>()
+                .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
+        }
+        if(thisWeapon)
+            damageDropOff = thisWeapon.GetDamageDropOffCurve;
+    }
+
     protected virtual void DoRaycastShot(Transform barrelEnd, float damage)
     {
         if (Physics.Raycast(barrelEnd.transform.position, barrelEnd.forward,
                 out RaycastHit hit, maxRaycastDistance, occlusionLayers))
         {
-            IPoolable bulletHole = _hitEffectsPool.GetPool.Get();
-            bulletHole.GetGameObject().GetComponent<HitDecals>().SetPosAndRotation(hit);
+            GameObject bulletHole = GetHitEffect();
+            bulletHole.GetComponent<IHitEffect>().SetPosAndRotation(hit);
             HitTarget?.Invoke(hit.point);
             if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
             {
@@ -50,25 +64,30 @@ public abstract class AbstractShootMechanic : MonoBehaviour
         bullet.SetSpeed(projectileSpeed);
         bullet.ResetItem();
         bullet.SetOcclusionLayers(occlusionLayers);
-        if(!bullet.CheckHitEffectPool())
-            bullet.SetHitEffectsPool(_hitEffectsPool);
     }
 
     public abstract void DoShot(Transform barrelEnd, float damage);
 
     public abstract void DoCloseShot(Transform cameraRoot, float damage);
+
+    public GameObject GetHitEffect()
+    {
+        if(usePoolForHitEffects)
+            return _hitEffectsPool.GetPool.Get().GetGameObject();
+        return Instantiate(hitEffect);
+    }
     
     
     public float GetReducedDamageByDistance(float distance, float damage)
     {
         distance = distance / 100;
-        for(int i = 0; i < thisWeapon.GetDamageDropOffCurve.length; i++)
+        for(int i = 0; i < damageDropOff.length; i++)
         { 
-            if (distance < thisWeapon.GetDamageDropOffCurve.keys[i].time)
+            if (distance < damageDropOff.keys[i].time)
             {
-                return damage * thisWeapon.GetDamageDropOffCurve.keys[i].value;
+                return damage * damageDropOff.keys[i].value;
             }
         }
-        return damage * thisWeapon.GetDamageDropOffCurve.keys[thisWeapon.GetDamageDropOffCurve.length - 1].value;
+        return damage * damageDropOff.keys[damageDropOff.length - 1].value;
     }
 }

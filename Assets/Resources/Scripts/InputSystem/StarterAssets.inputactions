@@ -106,7 +106,7 @@
                 },
                 {
                     "name": "ShootGrenade",
-                    "type": "Button",
+                    "type": "PassThrough",
                     "id": "e2dd3ae4-3a5d-482e-be9b-beb12bdaf982",
                     "expectedControlType": "Button",
                     "processors": "",

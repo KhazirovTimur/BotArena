@@ -394,11 +394,7 @@ namespace StarterAssets
 
 		private void ShootGrenade()
 		{
-			if (_input.shootGrenade)
-			{
-				_input.shootGrenade = false;
-				_playerInventory.ShootGrenade();
-			}
+			_playerInventory.ShootGrenade(_input.shootGrenade);
 		}
 
 		private void SetActiveWeapon(int weaponIndex)

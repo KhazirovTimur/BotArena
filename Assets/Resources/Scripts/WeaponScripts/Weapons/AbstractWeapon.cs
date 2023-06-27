@@ -51,9 +51,6 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Space(10)]
     [Header("Sounds")]
     [SerializeField] protected AudioClip[] shotSounds;
-
-    
-    
     
     protected AbstractShootMechanic ShootMechanic;
     
@@ -130,7 +127,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     {
         _triggerWasReleased = false;
         _playerInventory.ReduceActiveWeaponAmmoByShot(ammoSpendPerShot);
-        if (EnemyIsTooClose())
+        if (HitPointIsTooClose())
         {
             _playerCameraRootTransform.LookAt(_aim);
             RanomizeSpreadAngle(_playerCameraRootTransform);
@@ -152,7 +149,8 @@ public abstract class AbstractWeapon : MonoBehaviour
 
     protected virtual void PlayShotEffects()
     {
-        audioSource.PlayOneShot(shotSounds[Random.Range(0, shotSounds.Length)]);
+        if(audioSource)
+            audioSource.PlayOneShot(shotSounds[Random.Range(0, shotSounds.Length)]);
         if (!_muzzleVFX.IsUnityNull())
         {
             foreach (var effect in _muzzleVFX)
@@ -191,7 +189,7 @@ public abstract class AbstractWeapon : MonoBehaviour
     }
 
     
-    protected virtual bool EnemyIsTooClose()
+    protected virtual bool HitPointIsTooClose()
     {
         if ((_aim - _playerCameraRootTransform.position).magnitude < (barrelEnd.position - _playerCameraRootTransform.position).magnitude)
             return true;

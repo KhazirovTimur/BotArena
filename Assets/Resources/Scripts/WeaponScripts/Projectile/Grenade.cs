@@ -4,47 +4,61 @@ using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
-public class Grenade : MonoBehaviour
+public class Grenade : MonoBehaviour, IProjectile
 {
+    [SerializeField] private float gravity = 15f;
+    
     private float _bulletSpeed;
-    [SerializeField] private LayerMask occlusionLayers;
-    [SerializeField] private GameObject hitEffect;
+    private float _verticalSpeed;
+    private LayerMask occlusionLayers;
     
-    private RaycastHit hit;
+    private AbstractShootMechanic parentShooter;
     
+
+    private Rigidbody thisRb;
+
+    private void Start()
+    {
+        thisRb = GetComponent<Rigidbody>();
+        _verticalSpeed = Vector3.ProjectOnPlane(transform.forward * _bulletSpeed, transform.forward).magnitude;
+    }
+
     private void FixedUpdate()
     {
         MoveProjectile();
         CheckObjectsAhead();
+        AddGravity();
     }
-    
+
+    private void AddGravity()
+    {
+        _verticalSpeed -= gravity * Time.deltaTime;
+    }
+
     private void MoveProjectile()
     {
-        transform.Translate(Vector3.forward * _bulletSpeed * Time.deltaTime);
+        transform.Translate(transform.forward * _bulletSpeed * Time.deltaTime, Space.World);
+        transform.Translate(Vector3.up * _verticalSpeed * Time.deltaTime, Space.World);
     }
 
     
     //Function prevents "tunneling" fast projectiles through objects
     private void CheckObjectsAhead()
     {
-        if (Physics.Raycast(transform.position, transform.forward,
-                out hit, _bulletSpeed * 0.02f, occlusionLayers))
+        Vector3 dirrection =  (transform.position + (Vector3.up * (_verticalSpeed - gravity * Time.deltaTime))) 
+                              + ((transform.forward * _bulletSpeed) - transform.position);
+        if (Physics.Raycast(transform.position, dirrection,
+                out RaycastHit hit, (dirrection - transform.position).magnitude * 0.08f, occlusionLayers))
         {
-            Instantiate(hitEffect, transform.position, transform.rotation);
-            Destroy(gameObject);
-        }
-        if (Physics.Raycast(transform.position, -transform.up,
-                out hit, (-GetComponent<Rigidbody>().velocity.y) * 0.02f, occlusionLayers))
-        {
-            Instantiate(hitEffect, transform.position, transform.rotation);
+            MakeExplosion(hit);
             Destroy(gameObject);
         }
     }
 
-    private void OnCollisionEnter(Collision collision)
+    private void MakeExplosion(RaycastHit hit)
     {
-        Instantiate(hitEffect, transform.position, transform.rotation);
-        Destroy(this);
+        GameObject newExplosion = parentShooter.GetHitEffect();
+        newExplosion.GetComponent<IHitEffect>().SetPosAndRotation(hit);
     }
 
     public void SetDamage(float damage)
@@ -56,5 +70,19 @@ public class Grenade : MonoBehaviour
     {
         _bulletSpeed = speed;
     }
-    
+
+    public void ResetItem()
+    {
+        
+    }
+
+    public void SetOcclusionLayers(LayerMask mask)
+    {
+        occlusionLayers = mask;
+    }
+
+    public void SetParentShooter(AbstractShootMechanic parent)
+    {
+        parentShooter = parent;
+    }
 }

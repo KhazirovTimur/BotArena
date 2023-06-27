@@ -29,7 +29,7 @@ public class PlayerInventory : MonoBehaviour, ICollector
     //Player hands. Weapon spawns here
     [SerializeField] private WeaponSwitcher WeaponRoot;
 
-    [SerializeField] private ShoulderGrenadeLauncher shoulderGrenadeLauncher;
+    [SerializeField] private AbstractWeapon shoulderGrenadeLauncher;
      
     
     //Cache for weapons scripts components
@@ -233,9 +233,9 @@ public void ChangeWeaponPrefab()
         return false;
     }
 
-    public void ShootGrenade()
+    public void ShootGrenade(bool shootGrenade)
     {
-        shoulderGrenadeLauncher.DoShot();
+       shoulderGrenadeLauncher.TriggerPushed(shootGrenade, shoulderGrenadeLauncher.transform.forward);
     }
 
 

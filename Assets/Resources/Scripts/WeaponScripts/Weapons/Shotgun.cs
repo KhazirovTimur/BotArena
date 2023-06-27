@@ -11,7 +11,7 @@ public class Shotgun : AbstractWeapon
    {
       _triggerWasReleased = false;
       _playerInventory.ReduceActiveWeaponAmmoByShot(ammoSpendPerShot);
-      if (EnemyIsTooClose())
+      if (HitPointIsTooClose())
       {
          for (int i = 0; i < ProjectilesPerShot; i++)
          {

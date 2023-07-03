@@ -64,7 +64,7 @@ public class SimpleEnemySpawner : MonoBehaviour
     {
         GameObject NewEnemy = Instantiate(enemyToSpawn, transform);
         NewEnemy.GetComponent<AttackPlayer>().SetObjectPoolContainer(projectilesPool);
-        NewEnemy.GetComponent<SimpleEnemy>().SetMoneyPool(EnergyCellsPool).SetOneCellValue(oneCellValue);
+        NewEnemy.GetComponent<AbstractEnemy>().SetMoneyPool(EnergyCellsPool).SetOneCellValue(oneCellValue);
     }
 
     private void UpdateTimer()

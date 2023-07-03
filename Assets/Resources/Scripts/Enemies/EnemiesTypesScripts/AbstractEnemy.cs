@@ -6,17 +6,23 @@ using UnityEngine;
 
 
 
-public class SimpleEnemy : MonoBehaviour, IDamagable
+public class AbstractEnemy : MonoBehaviour, IDamagable
 {
+    [Header("Basic stats")]
     [SerializeField]
     private float hp;
     [SerializeField]
     private int valueInMoney;
+    
     private int oneCellValue;
 
     private int cellsCount;
 
     private ObjectPoolContainer moneyPool;
+    
+
+    private StaticPositionsController _positionsController;
+    public StaticPositionsController GetPositionsController => _positionsController; 
     
 
     public void TakeDamage(float damage)
@@ -51,13 +57,13 @@ public class SimpleEnemy : MonoBehaviour, IDamagable
         }
     }
 
-    public SimpleEnemy SetMoneyPool(ObjectPoolContainer pool)
+    public AbstractEnemy SetMoneyPool(ObjectPoolContainer pool)
     {
         moneyPool = pool;
         return this;
     }
     
-    public SimpleEnemy SetOneCellValue(int value)
+    public AbstractEnemy SetOneCellValue(int value)
     {
         oneCellValue = value;
         CountCells();
@@ -76,5 +82,10 @@ public class SimpleEnemy : MonoBehaviour, IDamagable
             transform.GetComponentInChildren<IHardReleasedToPool>().HardReleasedToPool();
         }
     }
-    
+
+    public void SetPositionController(StaticPositionsController controller)
+    {
+        _positionsController = controller;
+    }
+
 }

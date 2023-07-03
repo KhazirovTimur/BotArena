@@ -41,6 +41,7 @@ public class AttackPlayer : MonoBehaviour
         {
             UpdatePlayerPosition();
             timerUpdateLastPlayerPos = Time.time + delayUpdateLastPlayerPos;
+            IEnemyAttack r;
         }
     }
 

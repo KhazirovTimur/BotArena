@@ -9,7 +9,7 @@ public class EnemiesAgressionController : MonoBehaviour
 
     [SerializeField] private int maxAttackers;
 
-    [SerializeField] private float minAttackRate = 1;
+    [SerializeField] private float minAttackDelay = 1;
 
     private List<IAttacker> _attackingEnemies = new List<IAttacker>();
 
@@ -31,7 +31,7 @@ public class EnemiesAgressionController : MonoBehaviour
 
     private void GiveNewPermissions()
     {
-        minAttackRateTimer = Time.time + minAttackRate;
+        minAttackRateTimer = Time.time + minAttackDelay;
         if(_attackersQueue.Count == 0)
             return;
         _attackersQueue.Sort((a,b) => a.GetAttackPriority().CompareTo(b.GetAttackPriority()));
@@ -45,7 +45,7 @@ public class EnemiesAgressionController : MonoBehaviour
 
     public float CountAttackPriority(float distanceToPlayer, float attackPower)
     {
-        return attackPower + (distanceToPlayer / 10);
+        return attackPower + ( distanceToPlayer);
     }
 
     public void ReleaseFromAttackers(IAttacker enemy)
@@ -56,6 +56,11 @@ public class EnemiesAgressionController : MonoBehaviour
     public void RemoveFromAttackersQueue(IAttacker enemy)
     {
         _attackersQueue.Remove(enemy);
+    }
+
+    public void SetMaxAttackers(int amount)
+    {
+        maxAttackers = amount;
     }
 
 }

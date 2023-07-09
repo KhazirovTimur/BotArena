@@ -4,5 +4,10 @@ using UnityEngine;
 
 public interface IProjectileShootingMechanic
 {
-    public float GetDamageReducedByDistanceProjectile(float distance, float damage);
+    
+    public IPoolable GetProjectileReference();
+
+    public bool NeedPoolForProjectiles();
+
+    public void SetProjectilePool(ObjectPoolContainer pool);
 }

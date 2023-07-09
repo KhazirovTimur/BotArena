@@ -2,6 +2,7 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel.Design;
+using System.Security.Cryptography;
 using UnityEngine;
 using UnityEngine.ProBuilder.MeshOperations;
 
@@ -26,9 +27,13 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private AbstractShootMechanic _parentShooter;
 
     private Vector3 _initialPoint;
+
+    private bool _destroyProjectile;
     
     //cache for object pool
     private ObjectPoolContainer _selfPoolContainer;
+
+    private AnimationCurve _damageDropOff;
 
     
 
@@ -55,13 +60,21 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     {
         MoveProjectile();
         CheckObjectsAhead();
+        CheckDestroyFlag();
     }
 
 
     private void CheckDestroyTimer()
     {
-        if(Time.time > _bulletLifeTimer)
-            _selfPoolContainer.GetPool.Release(this);
+        if(Time.time > _bulletLifeTimer) 
+            DestroyProjectile();
+    }
+
+
+    private void CheckDestroyFlag()
+    {
+        if(_destroyProjectile)
+            DestroyProjectile();
     }
 
 
@@ -75,16 +88,26 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     private void CheckObjectsAhead()
     {
         if (Physics.Raycast(transform.position, transform.forward,
-                out hit, _bulletSpeed * 0.02f, occlusionLayers))
+                out hit, _bulletSpeed * 0.016f, occlusionLayers, QueryTriggerInteraction.Ignore))
         {
             GameObject bulletHole = _parentShooter.GetHitEffect();
             bulletHole.GetComponent<IHitEffect>().SetPosAndRotation(hit);
-            if (hit.transform.TryGetComponent<IDamagable>(out IDamagable target))
+            if (hit.transform.TryGetComponent(out IDamagable target))
             {
                 target.TakeDamage(CountReducedDamage());
             }
-            _selfPoolContainer.GetPool.Release(this);
+            _destroyProjectile = true;
         }
+    }
+
+    private void DestroyProjectile()
+    {
+        if (!_selfPoolContainer)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _selfPoolContainer.GetPool.Release(this);
     }
 
 
@@ -127,11 +150,13 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
     {
         _bulletLifeTimer = Time.time + bulletLifeTime;
         _initialPoint = transform.position;
+        _destroyProjectile = false;
     }
     
     public void SetParentShooter(AbstractShootMechanic parent)
     {
         _parentShooter = parent;
+        _damageDropOff = _parentShooter.GetDamageDropOff;
     }
 
     private float GetTravelDistance()
@@ -141,12 +166,20 @@ public class SimpleBullet : MonoBehaviour, IProjectile, IPoolable
 
     private float CountReducedDamage()
     {
-        if (_parentShooter.TryGetComponent(out IProjectileShootingMechanic shootMech))
-        {
-            return shootMech.GetDamageReducedByDistanceProjectile(GetTravelDistance(), _damage);
+        return GetReducedDamageByDistance(GetTravelDistance(), _damage);
+    }
+    
+    public float GetReducedDamageByDistance(float distance, float damage)
+    {
+        distance = distance / 100;
+        for(int i = 0; i < _damageDropOff.length; i++)
+        { 
+            if (distance < _damageDropOff.keys[i].time)
+            {
+                return damage * _damageDropOff.keys[i].value;
+            }
         }
-
-        return _damage;
+        return damage * _damageDropOff.keys[_damageDropOff.length - 1].value;
     }
 
 }

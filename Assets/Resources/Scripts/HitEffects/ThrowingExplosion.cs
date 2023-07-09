@@ -7,6 +7,8 @@ public class ThrowingExplosion : MonoBehaviour, IHitEffect
     [SerializeField] private float maxStartSpeed;
     [SerializeField] private float vfxLifeTime = 2.0f;
     [SerializeField] private float throwEffectLifeTime = 0.5f;
+    [SerializeField] private AudioClip explosionSound;
+    
 
     private float _maxRadius;
 
@@ -24,6 +26,7 @@ public class ThrowingExplosion : MonoBehaviour, IHitEffect
         _maxRadius = GetComponent<CapsuleCollider>().radius;
         _vfx = GetComponentInChildren<ParticleSystem>();
         _vfx.Play();
+        GetComponent<AudioSource>().PlayOneShot(explosionSound);
     }
 
     private void Update()

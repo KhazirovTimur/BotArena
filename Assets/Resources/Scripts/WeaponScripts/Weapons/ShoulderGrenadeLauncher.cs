@@ -16,7 +16,7 @@ public class ShoulderGrenadeLauncher : AbstractWeapon
             return false;
         if (!(Time.time > _delay))
             return false;
-        if (!(IsFullAuto || _triggerWasReleased))
+        if (!(isFullAuto || _triggerWasReleased))
             return false;
         return true;
     }

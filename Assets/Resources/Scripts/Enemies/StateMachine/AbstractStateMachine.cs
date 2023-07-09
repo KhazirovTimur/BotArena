@@ -30,12 +30,13 @@ public abstract class AbstractStateMachine<T> : MonoBehaviour, IStateMachineToDe
     {
         thisEnemy = GetComponent<EnemyInterface>();
         CreateStates();
+        _currentState.OnEnter();
     }
 
 
     protected virtual void Update()
     {
-        _currentState.Update();
+        _currentState.Updater();
     }
 
     public virtual void ChangeState(T newState)
@@ -44,7 +45,6 @@ public abstract class AbstractStateMachine<T> : MonoBehaviour, IStateMachineToDe
             _currentState.OnExit();
         _currentState = _states[newState];
         _currentState.OnEnter();
-       // Debug.Log($"State is changed to {newState}");
     }
 
 

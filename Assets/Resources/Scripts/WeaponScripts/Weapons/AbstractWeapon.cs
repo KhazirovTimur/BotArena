@@ -30,9 +30,9 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Tooltip("Fire rate, bullets pet minute")]
     [SerializeField] protected float rateOfFire;
     [Tooltip("Angle, to which bullets can deviate from central raycast")]
-    [SerializeField] protected float SpreadAngle;
+    [SerializeField] protected float spreadAngle;
     [Tooltip("If true, weapon will shoot while hold fire button")]
-    [SerializeField] protected bool IsFullAuto;
+    [SerializeField] protected bool isFullAuto;
     [SerializeField] protected int ammoSpendPerShot = 1;
     [Tooltip("1 sec = 100m.")]
     [SerializeField] protected AnimationCurve damageDropOff;
@@ -46,13 +46,15 @@ public abstract class AbstractWeapon : MonoBehaviour
     [Tooltip("Transform of empty gameobject at the end of barrel. Bullets spawn on this transform")]
     [SerializeField] protected Transform barrelEnd;
     [SerializeField] protected float minStandartShotDistance;
-    [SerializeField] private List<GameObject> _muzzleVFXContainer = new List<GameObject>();
+    [SerializeField] protected List<GameObject> _muzzleVFXContainer = new List<GameObject>();
     
     [Space(10)]
     [Header("Sounds")]
     [SerializeField] protected AudioClip[] shotSounds;
     
     protected AbstractShootMechanic ShootMechanic;
+
+    private float _startDamage;
     
     //Action for recoil
     public Action ShotWasMade;
@@ -74,13 +76,14 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected Transform _playerCameraRootTransform;
     
     //FX
-    private List<IMuzzleVFX> _muzzleVFX = new List<IMuzzleVFX>();
+    protected List<IMuzzleVFX> _muzzleVFX = new List<IMuzzleVFX>();
     protected AudioSource audioSource;
     
 
     
-    public void InitializeWeapon()
+    public virtual void InitializeWeapon()
     {
+        _startDamage = Damage;
         _triggerIsPushed = false;
         _triggerWasReleased = true;
         ShootMechanic = GetComponent<AbstractShootMechanic>();
@@ -92,6 +95,7 @@ public abstract class AbstractWeapon : MonoBehaviour
             {
                 _muzzleVFX.Add(element.GetComponent<IMuzzleVFX>());
             }
+        InitPools();
     }
 
 
@@ -113,7 +117,7 @@ public abstract class AbstractWeapon : MonoBehaviour
             return false;
         if (!(Time.time > _delay))
             return false;
-        if (!(IsFullAuto || _triggerWasReleased))
+        if (!(isFullAuto || _triggerWasReleased))
             return false;
         if (_playerInventory.GetAmmo(weaponAmmoType) <= 0)
             return false;
@@ -165,8 +169,8 @@ public abstract class AbstractWeapon : MonoBehaviour
     protected virtual void RanomizeSpreadAngle(Transform ToRandom)
     {
         ToRandom.localRotation =  Quaternion.Euler(
-            ToRandom.localRotation.eulerAngles.x + Random.Range(-SpreadAngle, SpreadAngle),
-            ToRandom.localRotation.eulerAngles.y + +Random.Range(-SpreadAngle, SpreadAngle),
+            ToRandom.localRotation.eulerAngles.x + Random.Range(-spreadAngle, spreadAngle),
+            ToRandom.localRotation.eulerAngles.y + +Random.Range(-spreadAngle, spreadAngle),
             ToRandom.localRotation.eulerAngles.z);
     }
     
@@ -188,7 +192,17 @@ public abstract class AbstractWeapon : MonoBehaviour
         return this.gameObject;
     }
 
-    
+    protected virtual void InitPools()
+    {
+        AllObjectPoolsContainer allPools = FindObjectOfType<AllObjectPoolsContainer>();
+        if(ShootMechanic.IsUsingHitEffectPool())
+            ShootMechanic.SetHitEffectPool(allPools.GetPool(ShootMechanic.GetHitEffectReference()));
+        if(ShootMechanic.TryGetComponent(out IProjectileShootingMechanic mechanic))
+            if(mechanic.NeedPoolForProjectiles())
+                mechanic.SetProjectilePool(allPools.GetPool(mechanic.GetProjectileReference()));
+    }
+
+
     protected virtual bool HitPointIsTooClose()
     {
         if ((_aim - _playerCameraRootTransform.position).magnitude < (barrelEnd.position - _playerCameraRootTransform.position).magnitude)
@@ -196,6 +210,11 @@ public abstract class AbstractWeapon : MonoBehaviour
         if ((_aim - barrelEnd.position).magnitude < minStandartShotDistance)
             return true;
         return false;
+    }
+
+    public virtual void UpgradeDamage(float damageMultiplier)
+    {
+        Damage += (_startDamage * damageMultiplier) - _startDamage;
     }
 
 

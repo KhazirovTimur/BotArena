@@ -9,6 +9,6 @@ public class WheelDroneDeathState : AbstractState<WheelDroneStates>
 
     public override void OnEnter()
     {
-        _stateMachine.GetThisEnemy.GetAbstractEnemy.KillThisEnemy();
+        _stateMachine.GetThisEnemy.GetAbstractEnemyStatus.KillThisEnemy();
     }
 }

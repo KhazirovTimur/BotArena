@@ -12,13 +12,11 @@ public class StaticPositionsController : MonoBehaviour
     public void RemoveFromAvailablePositions(StaticPosition position)
     {
         _availablePositions.Remove(position);
-        Debug.Log($"Removed point, point count {_availablePositions.Count}");
     }
 
     public void AddAvailablePosition(StaticPosition position)
     {
         _availablePositions.Add(position);
-        Debug.Log($"Added point, point count {_availablePositions.Count}");
     }
 
     public bool HavePositions()

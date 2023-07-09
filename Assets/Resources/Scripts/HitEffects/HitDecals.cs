@@ -46,14 +46,25 @@ public class HitDecals : MonoBehaviour, IPoolable, IHardReleasedToPool, IHitEffe
     {
         if (_timer < Time.time)
         {
-            _selfPool.GetPool.Release(this);
+            DestroyDecal();
         }
+    }
+
+    private void DestroyDecal()
+    {
+        if(!_selfPool)
+        {
+            Destroy(gameObject);
+            return;
+        }
+        _selfPool.GetPool.Release(this);
     }
 
     public void HardReleasedToPool()
     {
-        transform.SetParent(_selfPool.GetComponent<Transform>());
-        _selfPool.GetPool.Release(this);
+        if(_selfPool) 
+            transform.SetParent(_selfPool.GetComponent<Transform>());
+        DestroyDecal();
     }
 
     public void SetPosAndRotation(RaycastHit hit)

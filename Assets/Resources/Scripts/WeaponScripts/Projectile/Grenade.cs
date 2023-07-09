@@ -48,7 +48,7 @@ public class Grenade : MonoBehaviour, IProjectile
         Vector3 dirrection =  (transform.position + (Vector3.up * (_verticalSpeed - gravity * Time.deltaTime))) 
                               + ((transform.forward * _bulletSpeed) - transform.position);
         if (Physics.Raycast(transform.position, dirrection,
-                out RaycastHit hit, (dirrection - transform.position).magnitude * 0.08f, occlusionLayers))
+                out RaycastHit hit, (dirrection - transform.position).magnitude * 0.03f, occlusionLayers))
         {
             MakeExplosion(hit);
             Destroy(gameObject);

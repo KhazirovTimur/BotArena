@@ -12,8 +12,8 @@ using Object = System.Object;
 public class AllObjectPoolsContainer : MonoBehaviour
 {
 
-    //public Dictionary<string, ObjectPool<IPoolable>> Pools = new Dictionary<string, ObjectPool<IPoolable>>();
-    private List<ObjectPoolContainer> Pools = new List<ObjectPoolContainer>();
+    
+    private Dictionary<IPoolable, ObjectPoolContainer> Pools = new Dictionary<IPoolable, ObjectPoolContainer>();
 
 
     public ObjectPoolContainer CreateNewPool(IPoolable reference, int defaultCapacity)
@@ -27,8 +27,16 @@ public class AllObjectPoolsContainer : MonoBehaviour
         NewContainer.transform.SetParent(this.transform);
         ObjectPoolContainer NewPool = NewContainer.AddComponent<ObjectPoolContainer>();
         NewPool.CreatePool(reference, defaultCapacity);
-        Pools.Add(NewPool);
+        Pools.Add(reference, NewPool);
         return NewPool;
+    }
+
+    public ObjectPoolContainer GetPool(IPoolable reference)
+    {
+        if (Pools.ContainsKey(reference))
+            return Pools[reference];
+        CreateNewPool(reference, 50);
+        return Pools[reference];
     }
     
     

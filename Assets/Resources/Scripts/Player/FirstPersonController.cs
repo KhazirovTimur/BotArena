@@ -357,6 +357,7 @@ namespace StarterAssets
 			}
 			else
 			{
+				_input.dash = false;
 				//Moving controller in dash, reducing dash timer
 				if (_dashTimeDelta >= 0.0f)
 				{
@@ -420,5 +421,6 @@ namespace StarterAssets
 			// when selected, draw a gizmo in the position of, and matching radius of, the grounded collider
 			Gizmos.DrawSphere(new Vector3(transform.position.x, transform.position.y - GroundedOffset, transform.position.z), GroundedRadius);
 		}
+		
 	}
 }

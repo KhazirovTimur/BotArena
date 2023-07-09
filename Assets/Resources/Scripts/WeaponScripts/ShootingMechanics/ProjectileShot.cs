@@ -10,34 +10,25 @@ public class ProjectileShot : AbstractShootMechanic, IProjectileShootingMechanic
     [Tooltip("Speed of projectile")]
     [SerializeField] protected float projectileSpeed;
     [SerializeField] protected bool usePoolForProjectiles = true;
+
+    public float GetProjectileSpeed => projectileSpeed;
     
     //cache for projectiles pool
-    private ObjectPoolContainer projectilePoolContainer;
-
-
-    protected override void Initialize()
-    {
-        thisWeapon = GetComponent<AbstractWeapon>();
-        if(usePoolForProjectiles)
-            projectilePoolContainer = FindObjectOfType<AllObjectPoolsContainer>().
-            CreateNewPool(projectile.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
-        if(usePoolForHitEffects)
-            _hitEffectsPool = FindObjectOfType<AllObjectPoolsContainer>()
-            .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
-    }
+    private ObjectPoolContainer _projectilePoolContainer;
+    
 
     public override void DoShot(Transform barrelEnd, float damage)
     {
-        GameObject newBullet = GetProgectile();
+        GameObject newBullet = GetProjectile();
         newBullet.transform.position = barrelEnd.position;
         newBullet.transform.rotation = barrelEnd.rotation;
         DoProjectileShot(barrelEnd, damage, newBullet.GetComponent<IProjectile>(), projectileSpeed);
     }
 
-    private GameObject GetProgectile()
+    private GameObject GetProjectile()
     {
         if (usePoolForProjectiles)
-            return projectilePoolContainer.GetPool.Get().GetGameObject();
+            return _projectilePoolContainer.GetPool.Get().GetGameObject();
         return Instantiate(projectile);
     }
 
@@ -45,10 +36,20 @@ public class ProjectileShot : AbstractShootMechanic, IProjectileShootingMechanic
     {
         base.DoRaycastShot(cameraRoot, damage);
     }
+    
 
-    public float GetDamageReducedByDistanceProjectile(float distance, float damage)
+    public IPoolable GetProjectileReference()
     {
-        return GetReducedDamageByDistance(distance, damage);
+        return projectile.GetComponent<IPoolable>();
     }
 
+    public bool NeedPoolForProjectiles()
+    {
+        return usePoolForProjectiles;
+    }
+
+    public void SetProjectilePool(ObjectPoolContainer pool)
+    {
+        _projectilePoolContainer = pool;
+    }
 }

@@ -5,8 +5,8 @@ using UnityEngine;
 public class Teleport : MonoBehaviour, IInteractable
 {
 
-    [SerializeField] private string locationName;
-    public string GetLocationName => locationName;
+    [SerializeField] private AllLocations.Locations locationName;
+    public AllLocations.Locations GetLocationName => locationName;
     [SerializeField] private Teleport teleportTo;
     [SerializeField] private Transform spawnTransform;
     [SerializeField] private int teleportCost;
@@ -21,6 +21,7 @@ public class Teleport : MonoBehaviour, IInteractable
         {
             client.GetPlayerTransform.transform.position = teleportTo.GetSpawnTransform.position;
             client.GetPlayerTransform.rotation = teleportTo.GetSpawnTransform.rotation;
+            client.GetPlayerStatus.SetCurrentLocation(teleportTo.GetLocationName);
             client.GetPlayerInventory.AddValue(-teleportCost);
         }
     }

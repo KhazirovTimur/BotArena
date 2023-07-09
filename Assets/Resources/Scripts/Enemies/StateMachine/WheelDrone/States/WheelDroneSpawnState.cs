@@ -5,7 +5,7 @@ using UnityEngine;
 public class WheelDroneSpawnState : AbstractState<WheelDroneStates>
 {
 
-    private Vector3 _destination;
+    private float _chaseStateChance = 0.5f;
     
     public WheelDroneSpawnState(AbstractStateMachine<WheelDroneStates> stateMachine, WheelDroneStates thisState) : base(stateMachine, thisState)
     {
@@ -13,20 +13,19 @@ public class WheelDroneSpawnState : AbstractState<WheelDroneStates>
 
     public override void OnEnter()
     {
-        if (_stateMachine.GetThisEnemy.GetAbstractEnemy.GetPositionsController.HavePositions())
+        _stateMachine.GetThisEnemy.GetThisNavAgent.MoveToPoint(
+           new Vector3(Random.Range(1, 2), 0 , Random.Range(1, 2)));
+        if(Random.Range(0.0f, 1.0f) < _chaseStateChance)
+            _stateMachine.ChangeState(WheelDroneStates.Chase);
+        else
         {
-            _destination = _stateMachine.GetThisEnemy.GetAbstractEnemy.GetPositionsController.GetAvailablePosition()
-                .OccupyPosition().position;
-            _stateMachine.GetThisEnemy.GetThisNavAgent.agent.destination = _destination;
+            _stateMachine.ChangeState(WheelDroneStates.MoveToShootingPoint);
         }
     }
 
-    public override void Update()
+    public override void Updater()
     {
-        if ((_stateMachine.transform.position - _destination).magnitude < 1)
-        {
-            _stateMachine.ChangeState(WheelDroneStates.Attack);
-        }
+      
     }
 }
     

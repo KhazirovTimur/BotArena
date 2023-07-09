@@ -146,6 +146,7 @@ GameObject:
   - component: {fileID: 7551555030763477114}
   - component: {fileID: 8505378421056262053}
   - component: {fileID: 8505378421056262054}
+  - component: {fileID: 1170092869}
   m_Layer: 0
   m_Name: ShoulderGrenadeLauncher
   m_TagString: Untagged
@@ -207,8 +208,8 @@ MonoBehaviour:
   weapon: 0
   Damage: 1
   rateOfFire: 30
-  SpreadAngle: 0
-  IsFullAuto: 0
+  spreadAngle: 0
+  isFullAuto: 0
   ammoSpendPerShot: 0
   damageDropOff:
     serializedVersion: 2
@@ -238,7 +239,104 @@ MonoBehaviour:
   barrelEnd: {fileID: 0}
   minStandartShotDistance: 3
   _muzzleVFXContainer: []
-  shotSounds: []
+  shotSounds:
+  - {fileID: 8300000, guid: e541dc13526805b46b0875b483590b70, type: 3}
+--- !u!82 &1170092869
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5062589875735456468}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_PlayOnAwake: 1
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
 --- !u!1 &5162630246898607500
 GameObject:
   m_ObjectHideFlags: 0
@@ -302,7 +400,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &9085847021746812014
 Transform:
   m_ObjectHideFlags: 0
@@ -372,6 +470,7 @@ GameObject:
   - component: {fileID: 7640390647687675642}
   - component: {fileID: 2118996616301060132}
   - component: {fileID: 9092551953808333794}
+  - component: {fileID: 7269014486610791168}
   m_Layer: 8
   m_Name: Capsule
   m_TagString: Player
@@ -474,6 +573,18 @@ Rigidbody:
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 1
+--- !u!114 &7269014486610791168
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5741721240216752783}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b164f098936ae4946b9e5b5a661fa3bd, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &6773710903344860131
 GameObject:
   m_ObjectHideFlags: 0
@@ -546,14 +657,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 55919ac34a26952479f3fc91f777b2fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  MoveSpeed: 7
+  MoveSpeed: 9
   RotationSpeed: 1
   SpeedChangeRate: 10
   DashStartSpeed: 50
-  DashTimeout: 0.3
-  DashTime: 0.2
+  DashTimeout: 1
+  DashTime: 0.3
   InDash: 0
-  JumpHeight: 1.2
+  JumpHeight: 1.5
   Gravity: -15
   JumpTimeout: 0.1
   FallTimeout: 0.15
@@ -569,7 +680,7 @@ MonoBehaviour:
   WeaponShakeCoef: 0.28
   targetRaycastOcclusionLayers:
     serializedVersion: 2
-    m_Bits: 577
+    m_Bits: 16961
   interactionRaycastLayers:
     serializedVersion: 2
     m_Bits: 8192
@@ -744,6 +855,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: db277e265ab43584fac6b5f9469c8925, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  startLocation: 0
+  maxHP: 100
 --- !u!114 &8505378420265830433
 MonoBehaviour:
   m_ObjectHideFlags: 0

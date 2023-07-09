@@ -52,8 +52,8 @@ MonoBehaviour:
   weapon: 1
   Damage: 15
   rateOfFire: 90
-  SpreadAngle: 3
-  IsFullAuto: 0
+  spreadAngle: 3
+  isFullAuto: 0
   ammoSpendPerShot: 1
   damageDropOff:
     serializedVersion: 2
@@ -119,9 +119,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   occlusionLayers:
     serializedVersion: 2
-    m_Bits: 577
+    m_Bits: 16961
   hitEffect: {fileID: 7807375849227135412, guid: a3576071fb9831644a8cf7cc00dbc929,
     type: 3}
+  usePoolForHitEffects: 1
   maxRaycastDistance: 100
 --- !u!114 &5785646339044437656
 MonoBehaviour:

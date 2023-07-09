@@ -238,5 +238,10 @@ public void ChangeWeaponPrefab()
        shoulderGrenadeLauncher.TriggerPushed(shootGrenade, shoulderGrenadeLauncher.transform.forward);
     }
 
+    public void UpgradeCurrentWeapon(float multiplier)
+    {
+        Weapons[ActiveWeaponIndex].UpgradeDamage(multiplier);
+    }
+
 
 }

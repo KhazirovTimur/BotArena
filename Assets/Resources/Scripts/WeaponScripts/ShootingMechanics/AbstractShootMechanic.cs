@@ -13,6 +13,7 @@ public abstract class AbstractShootMechanic : MonoBehaviour
     protected ObjectPoolContainer _hitEffectsPool;
     protected AbstractWeapon thisWeapon;
     protected AnimationCurve damageDropOff;
+    public AnimationCurve GetDamageDropOff => damageDropOff;
 
     
     //Used for muzzle line render
@@ -26,15 +27,11 @@ public abstract class AbstractShootMechanic : MonoBehaviour
 
     protected virtual void Initialize()
     {
-        if(TryGetComponent(out AbstractWeapon weapon))
-            thisWeapon = weapon;
-        if(usePoolForHitEffects)
+        if (TryGetComponent(out AbstractWeapon weapon))
         {
-            _hitEffectsPool = FindObjectOfType<AllObjectPoolsContainer>()
-                .CreateNewPool(hitEffect.GetComponent<IPoolable>(), thisWeapon.GetDefaultPoolCapacity());
+            thisWeapon = weapon;
+            damageDropOff = weapon.GetDamageDropOffCurve;
         }
-        if(thisWeapon)
-            damageDropOff = thisWeapon.GetDamageDropOffCurve;
     }
 
     protected virtual void DoRaycastShot(Transform barrelEnd, float damage)
@@ -76,8 +73,24 @@ public abstract class AbstractShootMechanic : MonoBehaviour
             return _hitEffectsPool.GetPool.Get().GetGameObject();
         return Instantiate(hitEffect);
     }
+
+    public IPoolable GetHitEffectReference()
+    {
+        return hitEffect.GetComponent<IPoolable>();
+    }
+
+    public void SetHitEffectPool(ObjectPoolContainer pool)
+    {
+        _hitEffectsPool = pool;
+    }
+
+    public bool IsUsingHitEffectPool()
+    {
+        return usePoolForHitEffects;
+    }
     
-    
+
+
     public float GetReducedDamageByDistance(float distance, float damage)
     {
         distance = distance / 100;
